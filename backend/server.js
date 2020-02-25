@@ -6,7 +6,7 @@ require('dotenv').config();
 const cookieParser = require('cookie-parser');
 
 const journalRoute = require('./routes/journal');
-const registerRoute = require('./routes/register');
+const authenticateRoute = require('./routes/authenticate');
 
 const application = express()
 
@@ -24,7 +24,7 @@ application.use(bodyParser.json());
 //routes
 //(/routes,middleware function)
 application.use('/api',journalRoute);
-application.use('/api',registerRoute);
+application.use('/api',authenticateRoute);
 
 //port
 const port = process.env.PORT || 8000 //access to environment variable 
@@ -32,10 +32,10 @@ application.listen(port, () =>{
 	console.log(`Server is running on port ${port}`);
 })
 
-/*const morgan = require('morgan');*/
-/*const cors = require('cors');*/
+const morgan = require('morgan');
+const cors = require('cors');
 
-/*application.use(morgan('dev'));*/
+application.use(morgan('dev'));
 application.use(cookieParser());
 
 //cors error of browser-to-broser communication 
