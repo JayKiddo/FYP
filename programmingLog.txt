@@ -1,0 +1,19 @@
+1) Setting up Node API with express
+Using mongoose,express,body-parser,nodeman,dotenv
+
+create Member Schema and export member model
+setting up mongoDb with mongoose, set up controllers and routes
+Postman is used to test node api
+
+2)User Register,Login,Signout with JWT Token
+
+Create member Schema and export Member Model. Using crypto package to create hashed-password from virtual field password
+
+Setting up Register route: Route, Controllers Middlewares, Validator. shortID is used to generate userID
+Setting up Log In route: Same as Register route. Token will be generated when logging in and will be store in cookie
+Setting up Signout route: Clear member's cookie with token
+
+Create middleware to protect authorised content: express-Jwt pkg. Test middleware
+
+
+

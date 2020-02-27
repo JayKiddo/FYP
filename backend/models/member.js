@@ -9,7 +9,7 @@ const memberSchema = new mongoose.Schema({
 		required: true,
 		max: 32,
 		unique: true,
-		index: true, // defining index of this property,support execution of db queries
+		/*index: true,*/ // defining index of this property,support execution of db queries
 		lowercase: true
 	},
 	name: {
@@ -38,8 +38,8 @@ const memberSchema = new mongoose.Schema({
 		type: String,
 	},
 	role: {
-		type: Number,
-		trim: true
+		type: String,
+		default: 'member'
 	},
 	photo: { //photo will be stored in binary data type
 		data: Buffer, //work with binary data

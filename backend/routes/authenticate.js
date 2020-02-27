@@ -2,7 +2,7 @@
 
 const express = require('express');
 const router = express.Router();
-const {register,login,signout} = require('../controllers/authenticateControllers');
+const {register,login,logout} = require('../controllers/authenticateControllers');
 const {requireLogIn} = require('../controllers/authenticateControllers');
 
 
@@ -12,14 +12,14 @@ const {memberLoginValidator} = require('../validators/validate');
 
 router.post('/register', memberRegisterValidator, runValidation, register);
 router.post('/login', memberLoginValidator, runValidation, login);
-router.get('/signout',signout);
+router.get('/logout',logout);
 
 //testing validating token
 router.get('/secret',requireLogIn,(req,res)=>{
 	res.json({
-		message: 'This page is for user'
-	})
-})
+		member: req.user
+	});
+});
 
 
 module.exports = router

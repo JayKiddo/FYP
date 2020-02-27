@@ -4,7 +4,7 @@
 const Member = require('../models/member')
 const shortId = require('shortId')
 const jwt = require('jsonwebtoken')
-const expressJwt = require('express-Jwt') //Middleware that validates JsonWebTokens and sets req.user.
+const expressJwt = require('express-Jwt')
 
 exports.register = (req,res) => {
 	//mongoose query, Mongoose will not execute a query until then or exec has been called
@@ -39,25 +39,24 @@ exports.login = (req,res) => {
 	//check if user exist
 	const {email,password} = req.body
 	Member.findOne({email: req.body.email}).exec((error,member)=>{
-		if(!member) {
+		if(error || !member) {
 			return res.status(400).json({
 				error: "Your account have not been registered,please sign up"
 			})
 		}
 		//authenticate account
-		if(member.authenticate(password) == false) {
+		if(!member.authenticate(password)) {
 			return res.status(400).json({
 				error: "Wrong email or password"
 			});
 		}
 		//generate json web token and send to client ???
-		const token = jwt.sign({_id: member._id}, process.env.JWT_KEY, {expiresIn: '1d'})
+		const token = jwt.sign({ _id: member._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
 		//save this token in cookie
-		res.cookie('token',token,{expiresIn: '1d'});
+		res.cookie('token', token, { expiresIn: '1d' });
 		//give json response with user permission and token
-		//next time when they make a request to our backend, they can send that token and use that
 		// validate the user
-		const {_id,username,name,email,role} = member
+		const {_id,username,name,email,role} = member;
 		return res.json({
 			token,
 			member: {_id,username,name,email,role}
@@ -65,13 +64,20 @@ exports.login = (req,res) => {
 	});
 }
 
-exports.signout = (req,res) => {
+exports.logout = (req,res) => {
 	res.clearCookie('token')
 	res.json({
-		message: "Loged Out. See you soon"
+		message: 'logged out'
 	})
 }
 
+//Middleware that validates JsonWebTokens and sets req.user.
 exports.requireLogIn = expressJwt({
-	secret: process.env.JWT_KEY
+	secret: process.env.JWT_SECRET
+	//make member available in request object 
 })
+
+
+
+
+
