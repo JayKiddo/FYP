@@ -4,6 +4,7 @@ import Router from 'next/router'
 
 
 const Admin = ({children}) => {
+	
 	useEffect(()=>{
 		if(!isLoggedIn()) {
 			Router.push('/register');
@@ -11,6 +12,7 @@ const Admin = ({children}) => {
 			Router.push('/')
 		}
 	},[])
+
 	return <React.Fragment>
 		{children}
 	</React.Fragment>

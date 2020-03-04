@@ -1,3 +1,4 @@
+import NProgress from 'nprogress';
 import {useState} from 'react';
 import {APP_NAME} from '../config';
 import Link from 'next/link'
@@ -19,8 +20,8 @@ import {
   NavbarText
 } from 'reactstrap';
 
-const Header = () => {
 
+const Header = () => {
 
   const [isOpen,setIsOpen] = useState(false);
 
@@ -86,6 +87,10 @@ const Header = () => {
     </div>
   );
 };
+
+Router.onRouteChangeStart = url => NProgress.start();
+Router.onRouteChangeComplete = url => NProgress.done();
+Router.onRouteChangeError = url => NProgress.done();
 
 export default Header;
 

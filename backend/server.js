@@ -5,7 +5,6 @@ const mongoose = require('mongoose');
 require('dotenv').config();;
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
-
 const morgan = require('morgan');
 
 //middlewares

@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-
 const crypto = require('crypto');
 
 const memberSchema = new mongoose.Schema({
@@ -56,15 +55,9 @@ const memberSchema = new mongoose.Schema({
 
 memberSchema.virtual('password')
 	.set(function(password) {
-		//create temporary variable 
-		/*this._password = password*/
 		//encrypt password
 		this.hashed_password = this.encryptPassword(password);
 	})
-	/*.get(function() {
-		return this._password;
-		
-	})*/
 
 
 memberSchema.methods = {

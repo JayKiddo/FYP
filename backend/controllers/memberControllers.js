@@ -14,7 +14,7 @@ exports.memberMiddleware =(req,res,next) => {
 				error: 'Please log in to access this feature'
 			})
 		}
-		req.profile = member
+		/*req.profile = member*/
 		next()
 	})
 }
@@ -34,7 +34,8 @@ exports.adminMiddleware =(req,res,next) => {
 			})
 		} 
 
-		req.profile = member
+		/*req.profile = member*/
+		//req.profile is a newly created property, 
 		next()
 	})
 }
