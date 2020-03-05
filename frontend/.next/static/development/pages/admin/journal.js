@@ -28630,7 +28630,7 @@ var Journal = function Journal() {
 
 /***/ }),
 
-/***/ 5:
+/***/ 3:
 /*!***********************************************************************************************************************************************************************!*\
   !*** multi next-client-pages-loader?page=%2Fadmin%2Fjournal&absolutePagePath=C%3A%5CUsers%5Cducp1%5CDesktop%5CjournalProject%5Cfrontend%5Cpages%5Cadmin%5Cjournal.js ***!
   \***********************************************************************************************************************************************************************/
@@ -28653,5 +28653,5 @@ module.exports = dll_ef0ff7c60362f24a921f;
 
 /***/ })
 
-},[[5,"static/runtime/webpack.js"]]]);
+},[[3,"static/runtime/webpack.js"]]]);
 //# sourceMappingURL=journal.js.map

@@ -6,6 +6,8 @@ const Journal = require('../models/journal');
 const Category = require('../models/category');
 const Tag = require('../models/tag');
 
+const _ = require('lodash');
+
 /*const _ = require('lodash');*/ //for uploading blog
 
 
@@ -15,8 +17,9 @@ exports.listJournal = (req,res) => {
     .populate('categories','_id name slug') 
     .populate('tags','_id name slug')
     .populate('author','_id name username')
+    .sort({createdAt: -1}) //-1 is descending
     //select specific field
-    .select('_id title slug content democontent categories tags author createdAt updatedAt')
+    .select('_id title slug democontent categories tags author createdAt updatedAt')
     .exec((error,journal)=>{
         if(error){
             return res.status(400).json({
@@ -28,19 +31,161 @@ exports.listJournal = (req,res) => {
 }
 
 exports.listJournalCategoriesTags = (req,res) => {
-    //
+    //loading journal on request
+    //additional request is sent when loading more journals
+    //Pagination
+    let limit = req.body.limit ? parseInt(req.body.limit) : 10
+    let skip = req.body.skip ? parseInt(req.body.skip) : 0
+
+    let journals
+    let categories
+    let tags
+
+    Journal.find({})
+    //populate categories and specific fields
+    .populate('categories','_id name slug') 
+    .populate('tags','_id name slug')
+    .populate('author','_id name username profileURL')
+    //latest created journals are sorted first
+    .sort({createdAt: -1})
+    .skip(skip)
+    .limit(limit)
+    .select('_id title slug democontent categories tags author createdAt updatedAt')
+    .exec((error,journalData)=>{
+        if(error){
+            return res.json({
+                error: error
+            })
+        }
+        journals = journalData //all journals is here
+        //listing all categories
+        Category.find({}).exec((error,categoriesData)=>{
+            if(error){
+                return res.json({
+                    error: error
+                })
+            }
+            categories = categoriesData
+            //get all tags
+            Tag.find({}).exec((error,tagData)=>{
+                if(error){
+                    return res.json({
+                        error: error
+                    })
+                }
+                tags = tagData
+                //return all variables
+                res.json({journals,categories,tags,size: journals.length})
+            })
+        })
+    })
+
+
 }
 
+//return a single journal
 exports.readJournal = (req,res) => {
-    //
+    const slug = req.params.slug.toLowerCase(); //pass slug from req params
+
+    Journal.findOne({slug})
+    .populate('categories','_id name slug') 
+    .populate('tags','_id name slug')
+    .populate('author','_id name username')
+    //select specific field
+    .select('_id title content slug metatitle metadesc categories tags author createdAt updatedAt')
+    .exec((error,journal)=>{
+        if(error){
+            return res.json({
+                error: error
+            })
+        }
+        res.json(journal)
+    })
 }
 
 exports.deleteJournal = (req,res) => {
-    //
+    const slug = req.params.slug.toLowerCase();
+
+    Journal.findOneAndRemove({slug}).exec((error,journal)=>{
+        if(error){
+            return res.json({
+                error: error
+            })
+        }
+        res.json({
+            message: "Journal Deleted"
+        })
+    })
 }
 
+
+
+//update journal
 exports.updateJournal = (req,res) => {
-    //
+    const slug = req.params.slug.toLowerCase();
+    Journal.findOne({slug}).exec((error,oldJournal)=>{
+        if(error){
+            return res.json({
+                error: error
+            })
+        }
+        //set journal data to form data 
+        let form = new formidable.IncomingForm();
+        form.keepExtensions = true;
+        //parse request and 
+        form.parse(req, (error, fields, files) => { //parsing data as javacscript object
+        if (error) {
+            console.log(error)
+            return res.status(400).json({
+                error: error
+            });
+        }
+
+        //Apply SEO principles
+        let oldSlug = oldJournal.slug
+        //merge old data to new data
+        oldJournal=_.merge(oldJournal,fields)
+        //setting slug of updated journal to the old slug
+        oldJournal.slug = oldSlug 
+
+        const { content,metadesc,categories,tags} = fields
+
+        if(content){
+            oldJournal.democontent = stripHtml(content.substring(0, 250)) + ' ...';
+            oldJournal.metadesc = stripHtml(content.substring(0, 250)) + ' ...';
+        }
+
+         if(categories){
+            oldJournal.categories = categories.split(',')
+        }
+
+        if(tags){
+            oldJournal.tags = tags.split(',')
+        }
+
+        //handling files
+        if (files.photo) {
+            if (files.photo.size > 10000000) {
+                return res.status(400).json({
+                    error: 'Image should be less than 1mb in size'
+                });
+            }
+            oldJournal.photo.data = fs.readFileSync(files.photo.path);
+            oldJournal.photo.contentType = files.photo.type;
+        }
+
+        //update journal after merging new contents
+        oldJournal.save((error, result) => {
+            if (error) {
+                return res.status(400).json({
+                    error: error
+                });
+            }
+            res.json(result)
+        });
+    });
+
+    })
 }
 
 
@@ -145,5 +290,21 @@ exports.createJournal = (req, res) => {
     });
     //$push: special method by Mongo
 };
+
+exports.showPhoto = (req,res) => {
+    const slug = req.params.slug
+    Journal.findOne({slug})
+    .select('photo')
+    .exec((error,journal)=>{
+        if(error){
+            return res.status(400).json({
+                error: error
+            })
+        }
+        //set content type for response
+        res.set('Content-Type',journal.photo.contentType)
+        res.send(journal.photo.data)
+    })
+}
 
      

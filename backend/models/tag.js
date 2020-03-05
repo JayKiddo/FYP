@@ -14,7 +14,7 @@ const tagSchema = new mongoose.Schema({
 		/*index: true*/
 	}
 	//config to automatically create time and update time)
-},{timestamp: true});
+},{timestamps: true});
 
 
 module.exports = mongoose.model('Tag',tagSchema);

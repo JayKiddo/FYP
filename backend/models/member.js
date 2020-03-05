@@ -49,7 +49,7 @@ const memberSchema = new mongoose.Schema({
 		default:''
 	}
 	//config to automatically create time and update time)
-},{timestamp: true});
+},{timestamps: true});
 
 
 

@@ -5,7 +5,7 @@ const router = express.Router();
 
 const {requireLogIn} = require('../controllers/authenticateControllers');
 const {adminMiddleware,read} = require('../controllers/memberControllers');
-const {createJournal,listJournal,listJournalCategoriesTags,readJournal,deleteJournal,updateJournal} = require('../controllers/journalControllers')
+const {createJournal,listJournal,listJournalCategoriesTags,readJournal,deleteJournal,updateJournal,showPhoto} = require('../controllers/journalControllers')
 
 router.post('/journal',requireLogIn,adminMiddleware,createJournal);
 
@@ -21,6 +21,8 @@ router.delete('/journal/:slug',requireLogIn,adminMiddleware,deleteJournal);
 
 //update journal
 router.put('/journal/:slug',requireLogIn,adminMiddleware,updateJournal);
+
+router.get('/journal/photo/:slug',showPhoto)
 
 module.exports = router
 

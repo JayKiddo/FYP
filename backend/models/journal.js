@@ -41,7 +41,6 @@ const journalSchema = new mongoose.Schema(
             ref: 'Member'
         }
     },
-    { timestamp: true }
-);
+    { timestamps: true });
 
 module.exports = mongoose.model('Journal', journalSchema);
