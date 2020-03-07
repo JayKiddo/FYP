@@ -37,6 +37,13 @@ const Header = () => {
         <Collapse isOpen={isOpen} navbar>
           <Nav className="mr-auto" navbar>
 
+            <React.Fragment>
+             <NavItem>
+              <Link href="/journals">
+              <NavLink style={{cursor: 'pointer'}}>Journals</NavLink>
+              </Link>
+            </NavItem>
+            </React.Fragment>
 
           {!isLoggedIn() && (
             <React.Fragment>

@@ -151,7 +151,7 @@ exports.updateJournal = (req,res) => {
         const { content,metadesc,categories,tags} = fields
 
         if(content){
-            oldJournal.democontent = stripHtml(content.substring(0, 250)) + ' ...';
+            oldJournal.democontent = content.substring(0, 250) + ' ...';
             oldJournal.metadesc = stripHtml(content.substring(0, 250)) + ' ...';
         }
 
@@ -236,7 +236,7 @@ exports.createJournal = (req, res) => {
         journal.title = title;
         journal.content = content;
         journal.slug = slugify(title).toLowerCase();
-        journal.democontent = stripHtml(content.substring(0, 250)) + ' ...';
+        journal.democontent = content.substring(0, 250) + ' ...';
         journal.metatitle = `${title} - ${process.env.APP_NAME}`;
         journal.metadesc = stripHtml(content.substring(0, 160)); 
         journal.author = req.user._id; //received from requireLogIn

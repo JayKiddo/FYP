@@ -1,6 +1,6 @@
 import Layout from '../../components/Layout';
 import Admin from '../../components/Admin';
-import CreateJournal from '../../components/Journal/JournalAdd';
+import CreateJournal from '../../components/Journal/CreateJournal';
 import Link from 'next/link';
 
 const Journal = () => {
