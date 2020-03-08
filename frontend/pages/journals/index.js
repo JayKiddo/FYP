@@ -1,17 +1,47 @@
 //build-in component for sticking elements to 'head' of the page
-import Head from 'next/head'
-
 import Link from 'next/link'
 import Layout from '../../components/Layout'
 import {useState} from 'react'
 import {listJournals} from '../../actions/journal'
-import {API} from '../../config'
+import {API,APP_NAME,DOMAIN} from '../../config'
 import renderHTML from 'react-render-html'
 import moment from 'moment'
 import SingleJournal from '../../components/Journal/SingleJournal'
 //need to write a metatitle and meta description,opengraph title descrip
 
-const Journal = ({journals,categories,tags,size}) => {
+const Journal = ({journals,categories,tags,journalTotal,journalLimit,journalSkip}) => {
+	//keeping track of journal limit,skip and size
+	const [limit,setLimit]=useState(journalLimit)
+	const [skip,setSkip]=useState(journalSkip)
+	const [size,setSize]=useState(journalTotal)
+	//loaded blogs are kept tracked
+	const [loadedJournals,setloadedJournals] = useState([])
+
+
+//existed blogs will be skipped
+	const loadMoreJournals = () => {
+		//skip existing journals
+		let toSkip = skip + limit
+		listJournals(toSkip,limit).then(data=>{
+			if(data.error){
+				console.log(data.error)
+			} else {
+				setloadedJournals([...loadedJournals,...data.journals])
+				setSkip(toSkip)
+				setSize(data.size)
+
+			}
+		})
+	}
+
+	const loadMoreButton = () => {
+		return (
+			size > 0 && size >= limit && (
+				<button onClick={loadMoreJournals} className="btn btn-primary">Load More</button>
+			)
+		)
+	}
+
 	const showAllCategories = () => {
 		return categories.map((category,index)=>{
 			return <Link key={index} href={`/categories/${category.slug}`}>
@@ -20,7 +50,7 @@ const Journal = ({journals,categories,tags,size}) => {
 		})
 	}
 
-
+	//default journal
 	const showAllJournals = () => {
 		return journals.map((journal,index)=>{
 			return <article key={index}>
@@ -30,6 +60,15 @@ const Journal = ({journals,categories,tags,size}) => {
 		})
 	}
 
+	//show more journals from state
+	const showMoreJournals = () => {
+		return loadedJournals.map((journal,index)=>{
+			return <article key={index}>
+				<SingleJournal journal={journal}/>
+				<hr/>
+			</article>
+		})
+	}
 
 	return(
 		<React.Fragment>
@@ -50,7 +89,11 @@ const Journal = ({journals,categories,tags,size}) => {
 					</div>
 					<div className="container-fluid">
 						<div className="row">
-						<div className="col-md-12">{showAllJournals()}</div>
+						<div className="col-md-12">
+						{showAllJournals()}
+						{showMoreJournals()}
+						{loadMoreButton()}						
+						</div>
 						</div>
 					</div>
 				</main>
@@ -59,9 +102,14 @@ const Journal = ({journals,categories,tags,size}) => {
 	)
 }
 
-//using lifecycle method,make request to backend and return the data
+//using lifecycle method
+//request sent to backend
 Journal.getInitialProps = () => {
-	return listJournals().then(data=>{
+
+	let skip=0
+	let limit=2
+
+	return listJournals(skip,limit).then(data=>{
 		if (data.error) {
 			console.log(data.error)
 		} else {
@@ -71,15 +119,14 @@ Journal.getInitialProps = () => {
 				journals: data.journals,
 				categories: data.categories,
 				tags: data.tags,
-				size: data.size
+				journalTotal: data.size,
+				journalLimit: limit,
+				journalSkip: skip
 			}
 		}
 	})
 }
 
-Journal.defaultProps = {
-	name: "Duc"
-}
 
 
 export default Journal

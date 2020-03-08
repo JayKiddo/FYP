@@ -218,12 +218,19 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../config */ "./config.js");
 
 
-const listJournals = () => {
+const listJournals = (skip, limit) => {
+  //skip and limit are sent from client side
+  const data = {
+    skip,
+    limit
+  };
   return isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0___default()(`${_config__WEBPACK_IMPORTED_MODULE_1__["API"]}/blogs-categories-tags`, {
     method: 'POST',
     headers: {
-      Accept: 'application/json'
-    }
+      Accept: 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
   }).then(response => {
     return response.json();
   }).catch(error => console.log(error));
@@ -2477,23 +2484,20 @@ module.exports = __webpack_require__(/*! ./dist/client/link */ "./node_modules/n
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var next_head__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! next/head */ "next/head");
-/* harmony import */ var next_head__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(next_head__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var next_link__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! next/link */ "./node_modules/next/link.js");
-/* harmony import */ var next_link__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(next_link__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _components_Layout__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../components/Layout */ "./components/Layout.js");
-/* harmony import */ var _actions_journal__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../actions/journal */ "./actions/journal.js");
-/* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../config */ "./config.js");
-/* harmony import */ var react_render_html__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react-render-html */ "react-render-html");
-/* harmony import */ var react_render_html__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(react_render_html__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! moment */ "moment");
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_7__);
-/* harmony import */ var _components_Journal_SingleJournal__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../components/Journal/SingleJournal */ "./components/Journal/SingleJournal.js");
+/* harmony import */ var next_link__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! next/link */ "./node_modules/next/link.js");
+/* harmony import */ var next_link__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(next_link__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _components_Layout__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../components/Layout */ "./components/Layout.js");
+/* harmony import */ var _actions_journal__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../actions/journal */ "./actions/journal.js");
+/* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../config */ "./config.js");
+/* harmony import */ var react_render_html__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-render-html */ "react-render-html");
+/* harmony import */ var react_render_html__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(react_render_html__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! moment */ "moment");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _components_Journal_SingleJournal__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../components/Journal/SingleJournal */ "./components/Journal/SingleJournal.js");
 var _jsxFileName = "C:\\Users\\ducp1\\Desktop\\journalProject\\frontend\\pages\\journals\\index.js";
 
 var __jsx = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement;
 //build-in component for sticking elements to 'head' of the page
-
 
 
 
@@ -2507,28 +2511,76 @@ const Journal = ({
   journals,
   categories,
   tags,
-  size
+  journalTotal,
+  journalLimit,
+  journalSkip
 }) => {
+  //keeping track of journal limit,skip and size
+  const {
+    0: limit,
+    1: setLimit
+  } = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(journalLimit);
+  const {
+    0: skip,
+    1: setSkip
+  } = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(journalSkip);
+  const {
+    0: size,
+    1: setSize
+  } = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(journalTotal); //loaded blogs are kept tracked
+
+  const {
+    0: loadedJournals,
+    1: setloadedJournals
+  } = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]); //existed blogs will be skipped
+
+  const loadMoreJournals = () => {
+    //skip existing journals
+    let toSkip = skip + limit;
+    Object(_actions_journal__WEBPACK_IMPORTED_MODULE_3__["listJournals"])(toSkip, limit).then(data => {
+      if (data.error) {
+        console.log(data.error);
+      } else {
+        setloadedJournals([...loadedJournals, ...data.journals]);
+        setSkip(toSkip);
+        setSize(data.size);
+      }
+    });
+  };
+
+  const loadMoreButton = () => {
+    return size > 0 && size >= limit && __jsx("button", {
+      onClick: loadMoreJournals,
+      className: "btn btn-primary",
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 40
+      },
+      __self: undefined
+    }, "Load More");
+  };
+
   const showAllCategories = () => {
     return categories.map((category, index) => {
-      return __jsx(next_link__WEBPACK_IMPORTED_MODULE_2___default.a, {
+      return __jsx(next_link__WEBPACK_IMPORTED_MODULE_1___default.a, {
         key: index,
         href: `/categories/${category.slug}`,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 17
+          lineNumber: 47
         },
         __self: undefined
       }, __jsx("a", {
         className: "btn btn-primary mr-1 ml-1 mt-3",
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 18
+          lineNumber: 48
         },
         __self: undefined
       }, category.name));
     });
-  };
+  }; //default journal
+
 
   const showAllJournals = () => {
     return journals.map((journal, index) => {
@@ -2536,20 +2588,47 @@ const Journal = ({
         key: index,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 26
+          lineNumber: 56
         },
         __self: undefined
-      }, __jsx(_components_Journal_SingleJournal__WEBPACK_IMPORTED_MODULE_8__["default"], {
+      }, __jsx(_components_Journal_SingleJournal__WEBPACK_IMPORTED_MODULE_7__["default"], {
         journal: journal,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 27
+          lineNumber: 57
         },
         __self: undefined
       }), __jsx("hr", {
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 28
+          lineNumber: 58
+        },
+        __self: undefined
+      }));
+    });
+  }; //show more journals from state
+
+
+  const showMoreJournals = () => {
+    return loadedJournals.map((journal, index) => {
+      return __jsx("article", {
+        key: index,
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 66
+        },
+        __self: undefined
+      }, __jsx(_components_Journal_SingleJournal__WEBPACK_IMPORTED_MODULE_7__["default"], {
+        journal: journal,
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 67
+        },
+        __self: undefined
+      }), __jsx("hr", {
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 68
         },
         __self: undefined
       }));
@@ -2559,94 +2638,97 @@ const Journal = ({
   return __jsx(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, {
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 35
+      lineNumber: 74
     },
     __self: undefined
-  }, __jsx(_components_Layout__WEBPACK_IMPORTED_MODULE_3__["default"], {
+  }, __jsx(_components_Layout__WEBPACK_IMPORTED_MODULE_2__["default"], {
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 36
+      lineNumber: 75
     },
     __self: undefined
   }, __jsx("main", {
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 37
+      lineNumber: 76
     },
     __self: undefined
   }, __jsx("div", {
     className: "container-fluid",
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 38
+      lineNumber: 77
     },
     __self: undefined
   }, __jsx("header", {
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 39
+      lineNumber: 78
     },
     __self: undefined
   }, __jsx("div", {
     className: "col-md-12 pt-3",
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 40
+      lineNumber: 79
     },
     __self: undefined
   }, __jsx("h1", {
     className: "display-4 font-weight-bold text-center",
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 41
+      lineNumber: 80
     },
     __self: undefined
   }, "Journals")), __jsx("section", {
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 43
+      lineNumber: 82
     },
     __self: undefined
   }, __jsx("div", {
     className: "display-4",
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 45
+      lineNumber: 84
     },
     __self: undefined
   }, "Journal Categories: ", showAllCategories(), " ")), __jsx("br", {
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 48
+      lineNumber: 87
     },
     __self: undefined
   }))), __jsx("div", {
     className: "container-fluid",
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 51
+      lineNumber: 90
     },
     __self: undefined
   }, __jsx("div", {
     className: "row",
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 52
+      lineNumber: 91
     },
     __self: undefined
   }, __jsx("div", {
     className: "col-md-12",
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 53
+      lineNumber: 92
     },
     __self: undefined
-  }, showAllJournals()))))));
-}; //using lifecycle method,make request to backend and return the data
+  }, showAllJournals(), showMoreJournals(), loadMoreButton()))))));
+}; //using lifecycle method
+//request sent to backend
 
 
 Journal.getInitialProps = () => {
-  return Object(_actions_journal__WEBPACK_IMPORTED_MODULE_4__["listJournals"])().then(data => {
+  let skip = 0;
+  let limit = 2;
+  return Object(_actions_journal__WEBPACK_IMPORTED_MODULE_3__["listJournals"])(skip, limit).then(data => {
     if (data.error) {
       console.log(data.error);
     } else {
@@ -2656,15 +2738,14 @@ Journal.getInitialProps = () => {
         journals: data.journals,
         categories: data.categories,
         tags: data.tags,
-        size: data.size
+        journalTotal: data.size,
+        journalLimit: limit,
+        journalSkip: skip
       };
     }
   });
 };
 
-Journal.defaultProps = {
-  name: "Duc"
-};
 /* harmony default export */ __webpack_exports__["default"] = (Journal); //getInitialProps: server-side rendered method. Can only be used on pages, not in the components
 //server side render the page
 
@@ -2778,17 +2859,6 @@ module.exports = require("moment");
 /***/ (function(module, exports) {
 
 module.exports = require("next/config");
-
-/***/ }),
-
-/***/ "next/head":
-/*!****************************!*\
-  !*** external "next/head" ***!
-  \****************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = require("next/head");
 
 /***/ }),
 

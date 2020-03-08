@@ -1,12 +1,20 @@
 import fetch from 'isomorphic-fetch';
 import { API } from '../config';
 
-export const listJournals = () => {
+export const listJournals = (skip,limit) => {
+    //skip and limit are sent from client side
+    const data = {
+        skip,
+        limit
+    }
+
     return fetch(`${API}/blogs-categories-tags`, {
         method: 'POST',
         headers: {
-            Accept: 'application/json'
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
         },
+        body: JSON.stringify(data)   
     })
         .then(response => {
             return response.json();
