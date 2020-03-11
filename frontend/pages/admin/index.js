@@ -25,7 +25,14 @@ const AdminDashboard = () => {
 	  							<Link href="/admin/journal">
 	  								<a>Create Blog</a>
 	  							</Link>
-  							</li>							 
+  							</li>
+
+  							<li className="list-group-item">
+	  							<Link href="/admin/journal-manage">
+	  								<a>Update/Delete Journal</a>
+	  							</Link>
+  							</li>
+
 						</ul>
 						</div>
 						<div className="col-md-8">right</div>

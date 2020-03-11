@@ -37,7 +37,9 @@ const Journal = ({journals,categories,tags,journalTotal,journalLimit,journalSkip
 	const loadMoreButton = () => {
 		return (
 			size > 0 && size >= limit && (
+				<div className="text-center">
 				<button onClick={loadMoreJournals} className="btn btn-primary">Load More</button>
+				</div>
 			)
 		)
 	}
@@ -80,9 +82,7 @@ const Journal = ({journals,categories,tags,journalTotal,journalLimit,journalSkip
 							<h1 className="display-4 font-weight-bold text-center">Journals</h1>
 						</div>
 						<section>
-						
 						<div className="display-4">Journal Categories: {showAllCategories()} </div>
-
 						</section>
 						<br/>
 					</header>

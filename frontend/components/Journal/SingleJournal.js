@@ -21,7 +21,7 @@ const SingleJournal = ({journal}) => {
 			</Link>
 		})
 	
-
+		//navigating between dynamic pages
 	return (
 			<div className="lead pb-4">
 					<header>
@@ -38,7 +38,6 @@ const SingleJournal = ({journal}) => {
 						{showJournalCategories(journal)}
 						{showJournalTags(journal)}
 						<br/><br/>
-						<hr/>
 						<br/>
 					</section>
 					<div className="row">

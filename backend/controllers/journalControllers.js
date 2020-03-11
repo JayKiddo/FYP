@@ -8,9 +8,6 @@ const Tag = require('../models/tag');
 
 const _ = require('lodash');
 
-/*const _ = require('lodash');*/ //for uploading blog
-
-
 exports.listJournal = (req,res) => {
     Journal.find({})
     //populate categories and specific fields
@@ -304,6 +301,23 @@ exports.showPhoto = (req,res) => {
         //set content type for response
         res.set('Content-Type',journal.photo.contentType)
         res.send(journal.photo.data)
+    })
+}
+
+exports.listRelatedJournals = (req,res) => {
+    const {_id,categories} = req.body.journal
+
+    Journal.find({_id: {$ne: _id},categories: {$in: categories}})
+    .limit(3)
+    .populate('author','_id name profileURL')
+    .select('_id title slug democontent author createdAt updatedAt')
+    .exec((error,journals)=>{
+        if(error){
+            return res.status(400).json({
+                error: error
+            })
+        } 
+        res.json(journals)
     })
 }
 
