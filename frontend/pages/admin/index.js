@@ -23,7 +23,7 @@ const AdminDashboard = () => {
   							</li>
   							<li className="list-group-item">
 	  							<Link href="/admin/journal">
-	  								<a>Create Blog</a>
+	  								<a>Create Journal</a>
 	  							</Link>
   							</li>
 

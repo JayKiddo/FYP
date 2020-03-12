@@ -88,7 +88,7 @@ module.exports =
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 4);
+/******/ 	return __webpack_require__(__webpack_require__.s = 6);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -607,6 +607,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var next_router__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(next_router__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _actions_handleCookie__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../actions/handleCookie */ "./actions/handleCookie.js");
 /* harmony import */ var _actions_journal__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../actions/journal */ "./actions/journal.js");
+/* harmony import */ var react_render_html__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-render-html */ "react-render-html");
+/* harmony import */ var react_render_html__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(react_render_html__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! moment */ "moment");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_6__);
 var _jsxFileName = "C:\\Users\\ducp1\\Desktop\\journalProject\\frontend\\components\\Journal\\AmendJournal.js";
 
 var __jsx = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement;
@@ -618,14 +622,139 @@ var __jsx = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement;
 
 
 
+
+
 const AmendJournal = () => {
-  return __jsx("p", {
+  const {
+    0: journals,
+    1: setJournals
+  } = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]);
+  const {
+    0: message,
+    1: setMessage
+  } = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])('');
+  const token = Object(_actions_handleCookie__WEBPACK_IMPORTED_MODULE_3__["getCookie"])('token'); //when component mount
+
+  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(() => {
+    loadJournals();
+  }, []);
+
+  const loadJournals = () => {
+    Object(_actions_journal__WEBPACK_IMPORTED_MODULE_4__["listJournalForManage"])().then(data => {
+      if (data.error) {
+        console.log(data.error);
+      } else {
+        setJournals(data);
+      }
+    });
+  };
+
+  const removeJournal = (slug, token) => {
+    Object(_actions_journal__WEBPACK_IMPORTED_MODULE_4__["deleteJournal"])(slug, token).then(data => {
+      if (data.error) {
+        console.log(data.error);
+      } else {
+        setMessage(data.message);
+        loadJournals();
+      }
+    });
+  };
+
+  const deleteConfirm = (slug, token) => {
+    let answer = window.confirm('Delete this journal ?');
+
+    if (answer) {
+      removeJournal(slug, token);
+    }
+  };
+
+  const showMessage = () => {
+    if (message) {
+      return __jsx("div", {
+        className: "alert alert-warning",
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 51
+        },
+        __self: undefined
+      }, message);
+    }
+  };
+
+  const showUpdateButton = journal => {
+    return __jsx(next_link__WEBPACK_IMPORTED_MODULE_1___default.a, {
+      href: `/admin/${journal.slug}`,
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 57
+      },
+      __self: undefined
+    }, __jsx("a", {
+      className: "btn btn-sm btn-warning ml-2",
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 58
+      },
+      __self: undefined
+    }, "Update"));
+  };
+
+  const showJournals = () => {
+    return journals.map((journal, index) => {
+      return __jsx("div", {
+        className: "pb-5",
+        key: index,
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 66
+        },
+        __self: undefined
+      }, __jsx("h3", {
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 67
+        },
+        __self: undefined
+      }, journal.title), __jsx("p", {
+        className: "mark",
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 68
+        },
+        __self: undefined
+      }, "Written by ", journal.author.name, "  || Created at ", moment__WEBPACK_IMPORTED_MODULE_6___default()(journal.createdAt).fromNow()), __jsx("button", {
+        className: "btn btn-sm btn-danger",
+        onClick: () => deleteConfirm(journal.slug, token),
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 71
+        },
+        __self: undefined
+      }, "Delete"), showUpdateButton(journal));
+    });
+  };
+
+  return __jsx(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, {
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 10
+      lineNumber: 79
     },
     __self: undefined
-  }, "Manage Journals");
+  }, __jsx("div", {
+    className: "row",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 80
+    },
+    __self: undefined
+  }, __jsx("div", {
+    className: "col-md-12",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 81
+    },
+    __self: undefined
+  }, showMessage(), showJournals())));
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (AmendJournal);
@@ -2433,7 +2562,7 @@ const JournalManage = () => {
     },
     __self: undefined
   }, __jsx("div", {
-    className: "container-fluid",
+    className: "container",
     __source: {
       fileName: _jsxFileName,
       lineNumber: 10
@@ -2479,7 +2608,7 @@ const JournalManage = () => {
 
 /***/ }),
 
-/***/ 4:
+/***/ 6:
 /*!*********************************************!*\
   !*** multi ./pages/admin/journal-manage.js ***!
   \*********************************************/
@@ -2568,6 +2697,17 @@ module.exports = require("js-cookie");
 
 /***/ }),
 
+/***/ "moment":
+/*!*************************!*\
+  !*** external "moment" ***!
+  \*************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("moment");
+
+/***/ }),
+
 /***/ "next/config":
 /*!******************************!*\
   !*** external "next/config" ***!
@@ -2642,6 +2782,17 @@ module.exports = require("react");
 /***/ (function(module, exports) {
 
 module.exports = require("react-is");
+
+/***/ }),
+
+/***/ "react-render-html":
+/*!************************************!*\
+  !*** external "react-render-html" ***!
+  \************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("react-render-html");
 
 /***/ }),
 

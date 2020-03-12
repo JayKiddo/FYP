@@ -110,7 +110,7 @@ const CreateJournal = ({ router }) => {
     };
 
     	//fix re-render issues
-      const handleCheckCategory = category => () => {
+    const handleCheckCategory = category => () => {
         setValues({ ...values, error: '' });
         // return the first index or -1
         const clickedCategory = checkedCategory.indexOf(category);
@@ -237,17 +237,6 @@ const CreateJournal = ({ router }) => {
     		<ul style={{maxHeight: '100px',overflowY: 'scroll'}}>{showTags()}</ul>
     		</div>
     	</div>
-
-        <div>
-        <hr/>
-        {JSON.stringify(title)}
-        <hr/>
-        {JSON.stringify(content)}
-        <hr/>
-        {JSON.stringify(categories)}
-        <hr/>
-        {JSON.stringify(tags)}
-        </div>
     </div>;
 };
 
