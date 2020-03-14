@@ -1,6 +1,6 @@
 import Layout from '../../components/Layout';
 import Admin from '../../components/Admin';
-import AmendJournal from '../../components/Journal/AmendJournal';
+import ManageJournal from '../../components/Journal/ManageJournal';
 import Link from 'next/link';
 
 const JournalManage = () => {
@@ -13,7 +13,7 @@ const JournalManage = () => {
                             <h2>Manage Journals</h2>
                         </div>
                         <div className="col-md-6">
-                            <AmendJournal/>
+                            <ManageJournal/>
                         </div>
                     </div>
                 </div>

@@ -564,10 +564,10 @@ next_router__WEBPACK_IMPORTED_MODULE_6___default.a.onRouteChangeError = function
 
 /***/ }),
 
-/***/ "./components/Journal/AmendJournal.js":
-/*!********************************************!*\
-  !*** ./components/Journal/AmendJournal.js ***!
-  \********************************************/
+/***/ "./components/Journal/ManageJournal.js":
+/*!*********************************************!*\
+  !*** ./components/Journal/ManageJournal.js ***!
+  \*********************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -585,7 +585,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_render_html__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(react_render_html__WEBPACK_IMPORTED_MODULE_5__);
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_6__);
-var _jsxFileName = "C:\\Users\\ducp1\\Desktop\\journalProject\\frontend\\components\\Journal\\AmendJournal.js";
+var _jsxFileName = "C:\\Users\\ducp1\\Desktop\\journalProject\\frontend\\components\\Journal\\ManageJournal.js";
 
 var __jsx = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement;
 
@@ -598,7 +598,7 @@ var __jsx = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement;
 
 
 
-var AmendJournal = function AmendJournal() {
+var ManageJournal = function ManageJournal() {
   var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]),
       journals = _useState[0],
       setJournals = _useState[1];
@@ -733,7 +733,7 @@ var AmendJournal = function AmendJournal() {
   }, showMessage(), showJournals())));
 };
 
-/* harmony default export */ __webpack_exports__["default"] = (AmendJournal);
+/* harmony default export */ __webpack_exports__["default"] = (ManageJournal);
 
 /***/ }),
 
@@ -54268,7 +54268,7 @@ util.inherits = __webpack_require__(/*! inherits */ "./node_modules/inherits/inh
 /*</replacement>*/
 
 /*<replacement>*/
-var debugUtil = __webpack_require__(/*! util */ 5);
+var debugUtil = __webpack_require__(/*! util */ 4);
 var debug = void 0;
 if (debugUtil && debugUtil.debuglog) {
   debug = debugUtil.debuglog('stream');
@@ -56157,7 +56157,7 @@ Writable.prototype._destroy = function (err, cb) {
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/safe-buffer/index.js").Buffer;
-var util = __webpack_require__(/*! util */ 4);
+var util = __webpack_require__(/*! util */ 5);
 
 function copyBuffer(src, target, offset) {
   src.copy(target, offset);
@@ -60080,7 +60080,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _components_Layout__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../components/Layout */ "./components/Layout.js");
 /* harmony import */ var _components_Admin__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../components/Admin */ "./components/Admin.js");
-/* harmony import */ var _components_Journal_AmendJournal__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../components/Journal/AmendJournal */ "./components/Journal/AmendJournal.js");
+/* harmony import */ var _components_Journal_ManageJournal__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../components/Journal/ManageJournal */ "./components/Journal/ManageJournal.js");
 /* harmony import */ var next_link__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! next/link */ "./node_modules/next/link.js");
 /* harmony import */ var next_link__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(next_link__WEBPACK_IMPORTED_MODULE_4__);
 var _jsxFileName = "C:\\Users\\ducp1\\Desktop\\journalProject\\frontend\\pages\\admin\\journal-manage.js";
@@ -60138,7 +60138,7 @@ var JournalManage = function JournalManage() {
       lineNumber: 15
     },
     __self: this
-  }, __jsx(_components_Journal_AmendJournal__WEBPACK_IMPORTED_MODULE_3__["default"], {
+  }, __jsx(_components_Journal_ManageJournal__WEBPACK_IMPORTED_MODULE_3__["default"], {
     __source: {
       fileName: _jsxFileName,
       lineNumber: 16
@@ -60173,7 +60173,7 @@ var JournalManage = function JournalManage() {
 
 /***/ }),
 
-/***/ 6:
+/***/ 7:
 /*!*************************************************************************************************************************************************************************************!*\
   !*** multi next-client-pages-loader?page=%2Fadmin%2Fjournal-manage&absolutePagePath=C%3A%5CUsers%5Cducp1%5CDesktop%5CjournalProject%5Cfrontend%5Cpages%5Cadmin%5Cjournal-manage.js ***!
   \*************************************************************************************************************************************************************************************/
@@ -60196,5 +60196,5 @@ module.exports = dll_ef0ff7c60362f24a921f;
 
 /***/ })
 
-},[[6,"static/runtime/webpack.js"]]]);
+},[[7,"static/runtime/webpack.js"]]]);
 //# sourceMappingURL=journal-manage.js.map

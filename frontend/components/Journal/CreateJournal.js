@@ -10,10 +10,8 @@ import { createJournal } from '../../actions/journal';
 
 import dynamic from 'next/dynamic';
 
-//this modules will be imported dynamically
-const ReactQuill = dynamic(() => import('react-quill'), { ssr: false }); //making sure that react quill only runs in frontend
-/*import '../../node_modules/react-quill/dist/quill.snow.css';*/
-
+//Quill does not suppport SSR, so it's only loaded and rendered in the browser.
+const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
 const CreateJournal = ({ router }) => {
 
@@ -51,6 +49,7 @@ const CreateJournal = ({ router }) => {
      const token = getCookie('token');
 
       useEffect(() => {
+        //Browser API to create form data
         setValues({ ...values, formData: new FormData() });
         initCategories();
         initTags();
@@ -99,7 +98,7 @@ const CreateJournal = ({ router }) => {
     };
 
      const handleBodyContent = event => {
-        setContent(event); //push event to the response body
+        setContent(event);
         //bug fixed,set wrong name for form data key
         formData.set('content', event);	//populated form data
         console.log(event);
@@ -144,9 +143,11 @@ const CreateJournal = ({ router }) => {
         formData.set('tags', all);
     };
 
+
     const showCategories = () => {
         return (
-            categories && categories.map((category, index) => (
+            //categories && categories.map
+            categories.map((category, index) => (
                 <li key={index} className="list-unstyled">
                     <input onChange={handleCheckCategory(category._id)} type="checkbox" className="mr-2" />
                     <label className="form-check-label">{category.name}</label>
@@ -155,9 +156,11 @@ const CreateJournal = ({ router }) => {
         );
     }
 
+
         const showTags = () => {
+            //tags && tags.map
         return (
-            tags && tags.map((tag,index) => (
+            tags.map((tag,index) => (
                 <li key={index} className="list-unstyled">
                     <input onChange={handleCheckTag(tag._id)} type="checkbox" className="mr-2" />
                     <label className="form-check-label">#{tag.name}</label>
@@ -219,15 +222,15 @@ const CreateJournal = ({ router }) => {
 
     		<div className="col-md-4">
 
-<div className="form-group pb-2">
-	<h5>Featured Image</h5>
-	<hr/>
+    <div className="form-group pb-2">
+	   <h5>Featured Image</h5>
+	   <hr/>
 
-	<small className="text-muted">Maximum Size: 1MB</small>
-	<label className="btn btn-outline-info">Upload Featured image
-	<input onChange={handleChange('photo')} type="file" accept="images/*" hidden/> 
-	</label>
-</div>
+	   <small className="text-muted">Maximum Size: 1MB</small>
+	   <label className="btn btn-outline-info">Upload Featured image
+	       <input onChange={handleChange('photo')} type="file" accept="images/*" hidden/> 
+	   </label>
+    </div>
 
     		<h4>Categories</h4>
     		<hr/>

@@ -88,7 +88,7 @@ module.exports =
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 6);
+/******/ 	return __webpack_require__(__webpack_require__.s = 7);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -590,10 +590,10 @@ next_router__WEBPACK_IMPORTED_MODULE_6___default.a.onRouteChangeError = url => n
 
 /***/ }),
 
-/***/ "./components/Journal/AmendJournal.js":
-/*!********************************************!*\
-  !*** ./components/Journal/AmendJournal.js ***!
-  \********************************************/
+/***/ "./components/Journal/ManageJournal.js":
+/*!*********************************************!*\
+  !*** ./components/Journal/ManageJournal.js ***!
+  \*********************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -611,7 +611,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_render_html__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(react_render_html__WEBPACK_IMPORTED_MODULE_5__);
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! moment */ "moment");
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_6__);
-var _jsxFileName = "C:\\Users\\ducp1\\Desktop\\journalProject\\frontend\\components\\Journal\\AmendJournal.js";
+var _jsxFileName = "C:\\Users\\ducp1\\Desktop\\journalProject\\frontend\\components\\Journal\\ManageJournal.js";
 
 var __jsx = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement;
 
@@ -624,7 +624,7 @@ var __jsx = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement;
 
 
 
-const AmendJournal = () => {
+const ManageJournal = () => {
   const {
     0: journals,
     1: setJournals
@@ -757,7 +757,7 @@ const AmendJournal = () => {
   }, showMessage(), showJournals())));
 };
 
-/* harmony default export */ __webpack_exports__["default"] = (AmendJournal);
+/* harmony default export */ __webpack_exports__["default"] = (ManageJournal);
 
 /***/ }),
 
@@ -2537,7 +2537,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _components_Layout__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../components/Layout */ "./components/Layout.js");
 /* harmony import */ var _components_Admin__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../components/Admin */ "./components/Admin.js");
-/* harmony import */ var _components_Journal_AmendJournal__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../components/Journal/AmendJournal */ "./components/Journal/AmendJournal.js");
+/* harmony import */ var _components_Journal_ManageJournal__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../components/Journal/ManageJournal */ "./components/Journal/ManageJournal.js");
 /* harmony import */ var next_link__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! next/link */ "./node_modules/next/link.js");
 /* harmony import */ var next_link__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(next_link__WEBPACK_IMPORTED_MODULE_4__);
 var _jsxFileName = "C:\\Users\\ducp1\\Desktop\\journalProject\\frontend\\pages\\admin\\journal-manage.js";
@@ -2595,7 +2595,7 @@ const JournalManage = () => {
       lineNumber: 15
     },
     __self: undefined
-  }, __jsx(_components_Journal_AmendJournal__WEBPACK_IMPORTED_MODULE_3__["default"], {
+  }, __jsx(_components_Journal_ManageJournal__WEBPACK_IMPORTED_MODULE_3__["default"], {
     __source: {
       fileName: _jsxFileName,
       lineNumber: 16
@@ -2608,7 +2608,7 @@ const JournalManage = () => {
 
 /***/ }),
 
-/***/ 6:
+/***/ 7:
 /*!*********************************************!*\
   !*** multi ./pages/admin/journal-manage.js ***!
   \*********************************************/

@@ -1,6 +1,6 @@
 import Layout from '../../components/Layout';
 import Admin from '../../components/Admin';
-import JournalUpdate from '../../components/Journal/JournalUpdate';
+import AmendJournal from '../../components/Journal/AmendJournal';
 import Link from 'next/link';
 
 const UpdateJournal = () => {
@@ -13,7 +13,7 @@ const UpdateJournal = () => {
                             <h2>Update journal</h2>
                         </div>
                         <div className="col-md-6">
-                            <JournalUpdate />
+                            <AmendJournal />
                         </div>
                     </div>
                 </div>

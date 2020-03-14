@@ -101,7 +101,7 @@ module.exports =
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 5);
+/******/ 	return __webpack_require__(__webpack_require__.s = 6);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -727,10 +727,10 @@ next_router__WEBPACK_IMPORTED_MODULE_6___default.a.onRouteChangeError = url => n
 
 /***/ }),
 
-/***/ "./components/Journal/JournalUpdate.js":
-/*!*********************************************!*\
-  !*** ./components/Journal/JournalUpdate.js ***!
-  \*********************************************/
+/***/ "./components/Journal/AmendJournal.js":
+/*!********************************************!*\
+  !*** ./components/Journal/AmendJournal.js ***!
+  \********************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -748,9 +748,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _actions_journal__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../actions/journal */ "./actions/journal.js");
 /* harmony import */ var next_dynamic__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! next/dynamic */ "next/dynamic");
 /* harmony import */ var next_dynamic__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(next_dynamic__WEBPACK_IMPORTED_MODULE_7__);
-var _jsxFileName = "C:\\Users\\ducp1\\Desktop\\journalProject\\frontend\\components\\Journal\\JournalUpdate.js";
+var _jsxFileName = "C:\\Users\\ducp1\\Desktop\\journalProject\\frontend\\components\\Journal\\AmendJournal.js";
 
 var __jsx = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement;
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 
 
 
@@ -760,7 +767,7 @@ var __jsx = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement;
 
 
 
- //this modules will be imported dynamically
+ //Quill does not suppport SSR, so it's only loaded and rendered in the browser.
 
 const ReactQuill = next_dynamic__WEBPACK_IMPORTED_MODULE_7___default()(() => Promise.resolve(/*! import() */).then(__webpack_require__.t.bind(null, /*! react-quill */ "react-quill", 7)), {
   ssr: false,
@@ -768,73 +775,474 @@ const ReactQuill = next_dynamic__WEBPACK_IMPORTED_MODULE_7___default()(() => Pro
     webpack: () => [/*require.resolve*/(/*! react-quill */ "react-quill")],
     modules: ['react-quill']
   }
-}); //making sure that react quill only runs in frontend
+});
 
-const JournalUpdate = () => {
+const AmendJournal = ({
+  router
+}) => {
+  const {
+    0: categories,
+    1: setCategories
+  } = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]);
+  const {
+    0: tags,
+    1: setTags
+  } = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]);
+  const {
+    0: checkedCategory,
+    1: setCheckedCategory
+  } = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]); // categories
+
+  const {
+    0: checkedTag,
+    1: setCheckedTag
+  } = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]); // tags
+
+  const {
+    0: content,
+    1: setContent
+  } = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])({});
+  const {
+    0: values,
+    1: setValues
+  } = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])({
+    error: '',
+    sizeError: '',
+    status: '',
+    formData: '',
+    title: ''
+  });
+  const {
+    title,
+    error,
+    status,
+    formData
+  } = values;
+  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(() => {
+    //use browser method to create form data
+    setValues(_objectSpread({}, values, {
+      formData: new FormData()
+    })), loadJournal(), loadCategories(), loadTags();
+  }, [router]);
+
+  const loadJournal = () => {
+    if (router.query.slug) {
+      Object(_actions_journal__WEBPACK_IMPORTED_MODULE_6__["readJournal"])(router.query.slug).then(data => {
+        console.log(data);
+
+        if (data.error) {
+          console.log(data.error);
+        } else {
+          setValues(_objectSpread({}, values, {
+            title: data.title
+          }));
+          setContent(data.content);
+          loadCheckedCategories(data.categories);
+          loadCheckedTags(data.tags);
+        }
+      });
+    }
+  };
+
+  const loadCategories = () => {
+    Object(_actions_category__WEBPACK_IMPORTED_MODULE_4__["listCategory"])().then(data => {
+      if (data.error) {
+        setValues(_objectSpread({}, values, {
+          error: data.error
+        }));
+      } else {
+        setCategories(data);
+      }
+    });
+  };
+
+  const loadTags = () => {
+    Object(_actions_tag__WEBPACK_IMPORTED_MODULE_5__["listTag"])().then(data => {
+      if (data.error) {
+        setValues(_objectSpread({}, values, {
+          error: data.error
+        }));
+      } else {
+        setTags(data);
+      }
+    });
+  };
+
+  const loadCheckedCategories = categories => {
+    let oldCategories = [];
+    categories.map(category => {
+      oldCategories.push(category._id);
+    });
+    console.log(oldCategories);
+    setCheckedCategory(oldCategories);
+  };
+
+  const loadCheckedTags = tags => {
+    let oldTags = [];
+    tags.map(tag => {
+      oldTags.push(tag._id);
+    });
+    console.log(oldTags);
+    setCheckedTag(oldTags);
+  };
+
+  const checkOldCategories = category => {
+    const oldCategory = checkedCategory.indexOf(category);
+
+    if (oldCategory === -1) {
+      return false;
+    } else {
+      return true;
+    }
+  };
+
+  const checkOldTags = tag => {
+    const oldTag = checkedTag.indexOf(tag);
+
+    if (oldTag === -1) {
+      return false;
+    } else {
+      return true;
+    }
+  };
+
+  const handleChange = name => event => {
+    const value = name === 'photo' ? event.target.files[0] : event.target.value;
+    formData.set(name, value);
+    setValues(_objectSpread({}, values, {
+      [name]: value,
+      formData,
+      error: ''
+    }));
+    console.log(value);
+  };
+
+  const handleContent = event => {
+    setContent(event);
+    formData.set('content', event);
+    console.log(event);
+  };
+
+  const updateJournal = () => {
+    console.log('update journal');
+  };
+
+  const handleCheckCategory = category => () => {
+    setValues(_objectSpread({}, values, {
+      error: ''
+    })); // return the first index or -1
+
+    const clickedCategory = checkedCategory.indexOf(category);
+    const all = [...checkedCategory];
+
+    if (clickedCategory === -1) {
+      all.push(category);
+    } else {
+      all.splice(clickedCategory, 1);
+    }
+
+    console.log(all);
+    setCheckedCategory(all); //update state
+
+    formData.set('categories', all);
+  };
+
+  const handleCheckTag = tag => () => {
+    setValues(_objectSpread({}, values, {
+      error: ''
+    })); // return the first index or -1
+
+    const clickedTag = checkedTag.indexOf(tag);
+    const all = [...checkedTag];
+
+    if (clickedTag === -1) {
+      all.push(tag);
+    } else {
+      all.splice(clickedTag, 1);
+    }
+
+    console.log(all);
+    setCheckedTag(all);
+    formData.set('tags', all);
+  };
+
+  const showCategories = () => {
+    return categories.map((category, index) => __jsx("li", {
+      key: index,
+      className: "list-unstyled",
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 169
+      },
+      __self: undefined
+    }, __jsx("input", {
+      onChange: handleCheckCategory(category._id),
+      checked: checkOldCategories(category._id),
+      type: "checkbox",
+      className: "mr-2",
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 170
+      },
+      __self: undefined
+    }), __jsx("label", {
+      className: "form-check-label",
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 171
+      },
+      __self: undefined
+    }, category.name)));
+  };
+
+  const showTags = () => {
+    return tags.map((tag, index) => __jsx("li", {
+      key: index,
+      className: "list-unstyled",
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 181
+      },
+      __self: undefined
+    }, __jsx("input", {
+      onChange: handleCheckTag(tag._id),
+      checked: checkOldTags(tag._id),
+      type: "checkbox",
+      className: "mr-2",
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 182
+      },
+      __self: undefined
+    }), __jsx("label", {
+      className: "form-check-label",
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 183
+      },
+      __self: undefined
+    }, "#", tag.name)));
+  };
+
+  const updateJournalForm = () => {
+    return __jsx("form", {
+      onSubmit: updateJournal,
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 191
+      },
+      __self: undefined
+    }, __jsx("div", {
+      className: "form-group",
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 192
+      },
+      __self: undefined
+    }, __jsx("label", {
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 193
+      },
+      __self: undefined
+    }, "Title"), __jsx("input", {
+      type: "text",
+      className: "form-control",
+      value: title,
+      placeholder: "Write your title here",
+      onChange: handleChange('title'),
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 194
+      },
+      __self: undefined
+    })), __jsx("div", {
+      className: "form-group",
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 200
+      },
+      __self: undefined
+    }, __jsx(ReactQuill, {
+      modules: AmendJournal.modules,
+      formats: AmendJournal.formats,
+      value: content,
+      placeholder: "Write something...",
+      onChange: handleContent,
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 201
+      },
+      __self: undefined
+    })), __jsx("div", {
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 209
+      },
+      __self: undefined
+    }, __jsx("button", {
+      type: "submit",
+      className: "btn btn-primary mb-2",
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 210
+      },
+      __self: undefined
+    }, "Update")));
+  };
+
   return __jsx("div", {
     className: "container-fluid",
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 16
+      lineNumber: 218
     },
     __self: undefined
   }, __jsx("div", {
     className: "row",
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 17
+      lineNumber: 219
     },
     __self: undefined
   }, __jsx("div", {
     className: "col-md-8",
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 18
+      lineNumber: 221
     },
     __self: undefined
   }, __jsx("p", {
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 19
+      lineNumber: 222
     },
     __self: undefined
-  }, "Upadte Status")), __jsx("div", {
+  }, "Update Status")), __jsx("div", {
     className: "col-md-8",
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 22
+      lineNumber: 225
     },
     __self: undefined
-  }, __jsx("p", {
-    __source: {
-      fileName: _jsxFileName,
-      lineNumber: 23
-    },
-    __self: undefined
-  }, "Create Blog Form")), __jsx("div", {
+  }, updateJournalForm()), __jsx("div", {
     className: "col-md-4",
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 26
+      lineNumber: 229
     },
     __self: undefined
   }, __jsx("div", {
     className: "form-group pb-2",
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 28
+      lineNumber: 230
     },
     __self: undefined
   }, __jsx("h5", {
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 29
+      lineNumber: 231
     },
     __self: undefined
-  }, "Featured Image")))));
+  }, "Featured Image"), __jsx("hr", {
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 232
+    },
+    __self: undefined
+  }), __jsx("small", {
+    className: "text-muted",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 233
+    },
+    __self: undefined
+  }, "Maximum Size: 1MB"), __jsx("label", {
+    className: "btn btn-outline-info",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 234
+    },
+    __self: undefined
+  }, "Change Featured Image", __jsx("input", {
+    onChange: handleChange('photo'),
+    type: "file",
+    accept: "images/*",
+    hidden: true,
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 235
+    },
+    __self: undefined
+  }))), __jsx("h4", {
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 238
+    },
+    __self: undefined
+  }, "Categories"), __jsx("hr", {
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 239
+    },
+    __self: undefined
+  }), __jsx("ul", {
+    style: {
+      maxHeight: '100px',
+      overflowY: 'scroll'
+    },
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 240
+    },
+    __self: undefined
+  }, showCategories()), __jsx("hr", {
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 241
+    },
+    __self: undefined
+  }), __jsx("h4", {
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 242
+    },
+    __self: undefined
+  }, "Tags"), __jsx("hr", {
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 243
+    },
+    __self: undefined
+  }), __jsx("ul", {
+    style: {
+      map: '100px',
+      overflowY: 'scroll'
+    },
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 244
+    },
+    __self: undefined
+  }, showTags()))));
 };
 
-/* harmony default export */ __webpack_exports__["default"] = (JournalUpdate);
+AmendJournal.modules = {
+  toolbar: [[{
+    header: [1, 2, 3, 4, 5, 6]
+  }, {
+    font: []
+  }], [{
+    size: []
+  }], ['bold', 'italic', 'underline', 'strike'], [{
+    list: 'ordered'
+  }, {
+    list: 'bullet'
+  }], ['link', 'image', 'video'], ['clean'], ['code-block']]
+};
+AmendJournal.formats = ['header', 'font', 'size', 'bold', 'italic', 'underline', 'strike', 'list', 'bullet', 'link', 'image', 'video', 'code-block'];
+/* harmony default export */ __webpack_exports__["default"] = (Object(next_router__WEBPACK_IMPORTED_MODULE_2__["withRouter"])(AmendJournal));
 
 /***/ }),
 
@@ -2614,7 +3022,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _components_Layout__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../components/Layout */ "./components/Layout.js");
 /* harmony import */ var _components_Admin__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../components/Admin */ "./components/Admin.js");
-/* harmony import */ var _components_Journal_JournalUpdate__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../components/Journal/JournalUpdate */ "./components/Journal/JournalUpdate.js");
+/* harmony import */ var _components_Journal_AmendJournal__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../components/Journal/AmendJournal */ "./components/Journal/AmendJournal.js");
 /* harmony import */ var next_link__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! next/link */ "./node_modules/next/link.js");
 /* harmony import */ var next_link__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(next_link__WEBPACK_IMPORTED_MODULE_4__);
 var _jsxFileName = "C:\\Users\\ducp1\\Desktop\\journalProject\\frontend\\pages\\admin\\[slug].js";
@@ -2672,7 +3080,7 @@ const UpdateJournal = () => {
       lineNumber: 15
     },
     __self: undefined
-  }, __jsx(_components_Journal_JournalUpdate__WEBPACK_IMPORTED_MODULE_3__["default"], {
+  }, __jsx(_components_Journal_AmendJournal__WEBPACK_IMPORTED_MODULE_3__["default"], {
     __source: {
       fileName: _jsxFileName,
       lineNumber: 16
@@ -2685,7 +3093,7 @@ const UpdateJournal = () => {
 
 /***/ }),
 
-/***/ 5:
+/***/ 6:
 /*!*************************************!*\
   !*** multi ./pages/admin/[slug].js ***!
   \*************************************/
