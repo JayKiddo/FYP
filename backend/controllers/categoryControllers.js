@@ -1,5 +1,6 @@
 const Category = require('../models/category')
 const slugify = require('slugify')
+const Journal = require('../models/journal')
 
 
 exports.createCategory = (req, res) => {
@@ -29,18 +30,7 @@ exports.listCategory = (req, res) => {
     });
 };
 
-exports.readCategory = (req, res) => {
-    const slug = req.params.slug.toLowerCase();
 
-    Category.findOne({ slug }).exec((error, category) => {
-        if (error) {
-            return res.status(400).json({
-                error: error
-            });
-        }
-        res.json(category);
-    });
-};
 
 exports.deleteCategory = (req, res) => {
     const slug = req.params.slug.toLowerCase();
@@ -54,5 +44,30 @@ exports.deleteCategory = (req, res) => {
         res.json({
             message: 'Category deleted successfully'
         });
+    });
+};
+
+exports.readCategory = (req, res) => {
+    const slug = req.params.slug.toLowerCase();
+
+    Category.findOne({ slug }).exec((error, category) => {
+        if (error) {
+            return res.status(400).json({
+                error: error
+            });
+        }
+        Journal.find({categories: category})
+        .populate('categories','_id name slug')
+        .populate('tags','_id name slug')
+        .populate('author','_id name profileURL')
+        .select('_id title slug democontent author createdAt updatedAt')
+        .exec((error,journals)=>{
+            if(error){
+                return res.status(400).json({
+                    error: error
+                })
+            }
+            res.json({category: category, journals: journals})
+        }) 
     });
 };

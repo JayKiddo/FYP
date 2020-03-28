@@ -78,7 +78,6 @@ const CreateJournal = ({ router }) => {
 
    const publishJournal = event => {
         event.preventDefault();
-        console.log(formData);
         createJournal(formData, token).then(data => {
             if (data.error) {
                 setValues({ ...values, error: data.error });
@@ -188,7 +187,7 @@ const CreateJournal = ({ router }) => {
     }
 
     //Quill JS handle parsing image to binary string
- const createJournalForm    = () => {
+ const createJournalForm = () => {
         return (
             <form onSubmit={publishJournal} onClick={handleError()}>
                 <div className="form-group">

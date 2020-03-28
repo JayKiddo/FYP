@@ -1,4 +1,5 @@
 const Tag = require('../models/tag')
+const Journal = require('../models/journal')
 const slugify = require('slugify')
 
 
@@ -38,7 +39,20 @@ exports.readTag = (req, res) => {
                 error: error
             });
         }
-        res.json(tag);
+        Journal.find({tags: tag})
+        .populate('author','_id name profileURL')
+        .populate('categories','_id name slug')
+        .populate('tags','_id name slug')
+        .select('_id title slug democontent author createdAt updatedAt')
+        .exec((error,journals)=>{
+            if(error){
+                return res.status(400).json({
+                    error: error
+                })
+            } else {
+                res.json({tag: tag,journals: journals})
+            }
+        })
     });
 };
 

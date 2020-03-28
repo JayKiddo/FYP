@@ -6,12 +6,13 @@ import {API,APP_NAME} from '../../config'
 import renderHTML from 'react-render-html'
 import moment from 'moment'
 import RelatedJournal from '../../components/Journal/RelatedJournal'
+import {withRouter} from 'next/router'
 
 //dynamic routing,this url will be journals/:slug
 //grab router query,make request to backend
 
 //adding router object to component
-const readSingleJournal = ({journal}) => {
+const readSingleJournal = ({journal,router}) => {
 
 const [related,setRelated] = useState([])	
 
@@ -109,8 +110,9 @@ const showJournalCategories = (journal) =>
 }
 
 //send query param to backend
-readSingleJournal.getInitialProps = ({query}) =>{
-	return readJournal(query.slug).then(data=>{
+//fetching data to get props
+readSingleJournal.getInitialProps = (router) =>{
+	return readJournal(router.query.slug).then(data=>{
 		if(data.error){
 			console.log(data)
 		} else {
@@ -122,4 +124,6 @@ readSingleJournal.getInitialProps = ({query}) =>{
 	})
 }
 
-export default readSingleJournal
+export default withRouter(readSingleJournal)
+//router object is returned by withRouter()
+//query string is populated by NextJS

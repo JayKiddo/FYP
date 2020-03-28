@@ -1,10 +1,11 @@
 import NProgress from 'nprogress';
 import {useState} from 'react';
 import {APP_NAME} from '../config';
-import Link from 'next/link'
-import {logout} from '../actions/auth'
-import {isLoggedIn} from '../actions/handleCookie'
-import Router from 'next/router'
+import Link from 'next/link';
+import {logout} from '../actions/auth';
+import {isLoggedIn} from '../actions/handleCookie';
+import Router from 'next/router';
+import Search from './Search'
 import {
   Collapse,
   Navbar,
@@ -91,6 +92,7 @@ const Header = () => {
           </Nav>
         </Collapse>
       </Navbar>
+      <Search/>
     </div>
   );
 };

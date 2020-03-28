@@ -5,8 +5,9 @@ import { withRouter } from 'next/router'; //use router,export component with rou
 import { getCookie, isLoggedIn } from '../../actions/handleCookie';
 import { listCategory } from '../../actions/category';
 import { listTag } from '../../actions/tag';
-import { createJournal,readJournal } from '../../actions/journal';
+import { createJournal,readJournal,updateJournal } from '../../actions/journal';
 import dynamic from 'next/dynamic';
+import {API} from '../../config';
 
 
 //Quill does not suppport SSR, so it's only loaded and rendered in the browser.
@@ -29,7 +30,8 @@ const AmendJournal = ({router}) => {
         title: ''
     })
 
-    const {title,error,status,formData} = values; 
+    const {title,error,status,formData} = values;
+    const token = getCookie('token'); 
 
     useEffect(()=>{
         //use browser method to create form data
@@ -38,11 +40,11 @@ const AmendJournal = ({router}) => {
         loadCategories(),
         loadTags()
     },[router])
+    //re-render when router changes
 
     const loadJournal = () => {
         if(router.query.slug){
             readJournal(router.query.slug).then(data=>{
-                console.log(data)
                 if(data.error){
                     console.log(data.error)
                 } else {
@@ -117,18 +119,31 @@ const AmendJournal = ({router}) => {
         const value = name === 'photo' ? event.target.files[0] : event.target.value;
         formData.set(name, value);
         setValues({ ...values, [name]: value, formData, error: '' });
-        console.log(value)
     };
 
     const handleContent = event => {
+        setValues({...values,error:''})
         setContent(event)
         formData.set('content', event)
-        console.log(event)
     }
 
-    const updateJournal = () => {
-        console.log('update journal')
+    const editJournal = event => {
+        event.preventDefault()
+        //update journal with formData,token,slug
+        updateJournal(formData,token,router.query.slug).then(data=>{
+            if(data.error){
+                setValues({...values,error: data.error})
+            } else {
+                setValues({...values,title: '',status: `Journal titled ${data.title} has been updated`})
+                if(isLoggedIn() && isLoggedIn().role === "admin"){
+                    Router.replace(`/admin/${router.query.slug}`)
+                } else if(isLoggedIn() && isLoggedIn().role === "member"){
+                    Router.replace(`/member`)
+                }       
+            }
+        })
     }
+
 
      const handleCheckCategory = category => () => {
         setValues({ ...values, error: '' });
@@ -174,8 +189,7 @@ const AmendJournal = ({router}) => {
         );
     }
     
-
-        const showTags = () => {
+    const showTags = () => {
         return (
             tags.map((tag,index) => (
                 <li key={index} className="list-unstyled">
@@ -186,9 +200,17 @@ const AmendJournal = ({router}) => {
         );
     }
 
+    const showStatus = () => {
+        if(status){
+            return <div className="alert alert-success">{status}</div>
+        } else if(error){
+            return <div className="alert alert-danger">{error}</div>
+        }
+    }
+
     const updateJournalForm = () => {
         return (
-            <form onSubmit={updateJournal}>
+            <form onSubmit={editJournal}>
                 <div className="form-group">
                     <label>Title</label>
                     <input type="text" className="form-control" 
@@ -219,12 +241,18 @@ const AmendJournal = ({router}) => {
                 <div className="row">
 
                     <div className="col-md-8">
-                        <p>Update Status</p>
+                        {showStatus()}
                     </div>
 
                     <div className="col-md-8">
                        {updateJournalForm()}
                     </div>
+
+                    <div className="col-md-8">
+                     
+                        <img style={{ width: '100%' }} src={`${API}/journal/photo/${router.query.slug}`} alt={title} />
+                    
+                     </div>
 
                     <div className="col-md-4">
                         <div className="form-group pb-2">

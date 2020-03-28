@@ -18,7 +18,7 @@ const Category = () => {
 
     useEffect(()=>{ //call when state is changed 
     	loadCategories()
-    },[isReload])  //localCategories is invoked only when reload change value
+    },[isReload])  //loadCategories is invoked only when isReload change value
 
     //load all categories when the page is mounted(lifecycle)
     const loadCategories = () => {

@@ -83,7 +83,7 @@ exports.listJournalCategoriesTags = (req,res) => {
 //return a single journal
 exports.readJournal = (req,res) => {
     const slug = req.params.slug.toLowerCase(); //pass slug from req params
-
+    console.log(req.params)
     Journal.findOne({slug})
     .populate('categories','_id name slug') 
     .populate('tags','_id name slug')
@@ -138,14 +138,41 @@ exports.updateJournal = (req,res) => {
             });
         }
 
+        const { title, content, categories, tags ,metadesc } = fields
+
+
+        if (!title || !title.length) {
+            return res.status(400).json({
+                error: 'title is required'
+            });
+        }
+
+        if (!content || content.length < 200) {
+            console.log(content)
+            return res.status(400).json({
+                error: 'Content is too short'
+            });
+        }
+
+
+        if (!categories || categories.length === 0) {
+            return res.status(400).json({
+                error: 'At least one category is required'
+            });
+        }
+
+        if (!tags || tags.length === 0) {
+            return res.status(400).json({
+                error: 'At least one tag is required'
+            });
+        }
+
         //Apply SEO principles
         let oldSlug = oldJournal.slug
         //merge old data to new data
         oldJournal=_.merge(oldJournal,fields)
         //setting slug of updated journal to the old slug
         oldJournal.slug = oldSlug 
-
-        const { content,metadesc,categories,tags} = fields
 
         if(content){
             oldJournal.democontent = content.substring(0, 250) + ' ...';
@@ -289,7 +316,7 @@ exports.createJournal = (req, res) => {
 };
 
 exports.showPhoto = (req,res) => {
-    const slug = req.params.slug
+    const slug = req.params.slug.toLowerCase()
     Journal.findOne({slug})
     .select('photo')
     .exec((error,journal)=>{
@@ -321,4 +348,20 @@ exports.listRelatedJournals = (req,res) => {
     })
 }
 
-     
+
+exports.listSearch = (req,res) => {
+    const {search} = req.query
+    if(search) {
+        Journal.find({ title: { $regex: search, $options: 'i' } })
+        .select('-photo -content')
+        .exec((error,journals)=>{
+            if(error){
+                return res.status(400).json({
+                    error: error
+                })
+            }
+            res.json(journals)
+        })
+    }
+}
+

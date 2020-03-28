@@ -1,5 +1,6 @@
 import fetch from 'isomorphic-fetch';
 import { API } from '../config';
+import queryString from 'query-string'
 
 export const listJournals = (skip,limit) => {
     //skip and limit are sent from client side
@@ -103,4 +104,19 @@ export const updateJournal = (journal,token,slug) => {
         })
         .catch(error => console.log(error));
 };
+
+//send params from frontend
+export const listSearch = (params) => {
+    console.log('search params',params) //assumption: params is an object
+    let query = queryString.stringify(params)   
+    console.log('query params',query)   //query = object stringified 
+
+    return fetch(`${API}/journals/search?${query}`,{
+        method: 'GET'
+    })
+    .then(response => {
+        return response.json()
+    })
+    .catch(error=> console.log(error))
+}
 
