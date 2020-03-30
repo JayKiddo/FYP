@@ -116,7 +116,6 @@ readSingleJournal.getInitialProps = (router) =>{
 		if(data.error){
 			console.log(data)
 		} else {
-
 			return {
 				journal: data
 			}

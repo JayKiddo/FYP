@@ -69,7 +69,7 @@ const Header = () => {
           {isLoggedIn() && isLoggedIn().role === 'member' && (
               <NavItem>
               <Link href="/member">
-              <NavLink> {`${isLoggedIn().name}'s Dashboard`}</NavLink>
+              <NavLink style={{cursor: 'pointer'}}> {`Member's Dashboard`}</NavLink>
               </Link>              
             </NavItem>
             )}

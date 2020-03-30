@@ -38,20 +38,42 @@ exports.adminMiddleware =(req,res,next) => {
 			})
 		} 
 
-		/*req.profile = member*/
-		//req.profile is a newly created property, 
+		//req.profile is a newly created property
+		req.profile = member
 		next()
 	})
 }
 
-exports.updateMember = () => {
+exports.updateMember = (req,res) => {
 	const form = formidable.IncomingForm()
-	form.parse(req,(error,fields,files)=>{
+	form.keepExtensions = true;
+	form.parse(req ,(error,fields,files)=>{
 		if(error){
 			return res.status(400).json({
 				error: error
 			})
 		}
+
+		const {name,username,email} = fields
+
+		if (!name || !name.length) {
+            return res.status(400).json({
+                error: 'Name is required'
+            });
+        }
+
+        if (!username || !username.length) {
+            return res.status(400).json({
+                error: 'Username is required'
+            });
+        }
+
+        if (!email || !email.length) {
+            return res.status(400).json({
+                error: 'Email is required'
+            });
+        } 
+
 		let member = req.profile
 		member = _.extend(member,fields)
 
@@ -61,8 +83,10 @@ exports.updateMember = () => {
 					error: 'Image size should be less than 1MB'
 				})
 			}
-			member.photo.data = fs.readFileSync(files.photo.data)
+			member.photo.data = fs.readFileSync(files.photo.path)
 			member.photo.contentType = files.photo.type
+		}
+
 
 			member.save((error,result)=>{
 				if(error){
@@ -73,8 +97,6 @@ exports.updateMember = () => {
 				member.hashed_password = undefined
 				res.json(member)
 			})
-
-		}
 	})
 }
 
@@ -87,7 +109,7 @@ exports.photo = (req,res) => {
 			})
 		}
 		if(member.photo.data){
-			res.set('Content-Type',member.photo.data)
+			res.set('Content-Type',member.photo.contentType)
 			return res.send(member.photo.data)
 		}
 	})

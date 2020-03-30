@@ -479,12 +479,15 @@ var Header = function Header() {
     },
     __self: this
   }, __jsx(reactstrap__WEBPACK_IMPORTED_MODULE_8__["NavLink"], {
+    style: {
+      cursor: 'pointer'
+    },
     __source: {
       fileName: _jsxFileName,
       lineNumber: 72
     },
     __self: this
-  }, " ", "".concat(Object(_actions_handleCookie__WEBPACK_IMPORTED_MODULE_5__["isLoggedIn"])().name, "'s Dashboard")))), Object(_actions_handleCookie__WEBPACK_IMPORTED_MODULE_5__["isLoggedIn"])() && Object(_actions_handleCookie__WEBPACK_IMPORTED_MODULE_5__["isLoggedIn"])().role === 'admin' && __jsx(reactstrap__WEBPACK_IMPORTED_MODULE_8__["NavItem"], {
+  }, " ", "Member's Dashboard"))), Object(_actions_handleCookie__WEBPACK_IMPORTED_MODULE_5__["isLoggedIn"])() && Object(_actions_handleCookie__WEBPACK_IMPORTED_MODULE_5__["isLoggedIn"])().role === 'admin' && __jsx(reactstrap__WEBPACK_IMPORTED_MODULE_8__["NavItem"], {
     __source: {
       fileName: _jsxFileName,
       lineNumber: 78
@@ -27711,7 +27714,7 @@ var MemberDashboard = function MemberDashboard() {
 
 /***/ }),
 
-/***/ 3:
+/***/ 2:
 /*!***********************************************************************************************************************************!*\
   !*** multi next-client-pages-loader?page=%2Fmember&absolutePagePath=D%3A%5CjournalProject%5Cfrontend%5Cpages%5Cmember%5Cindex.js ***!
   \***********************************************************************************************************************************/
@@ -27734,5 +27737,5 @@ module.exports = dll_ef0ff7c60362f24a921f;
 
 /***/ })
 
-},[[3,"static/runtime/webpack.js"]]]);
+},[[2,"static/runtime/webpack.js"]]]);
 //# sourceMappingURL=member.js.map

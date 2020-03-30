@@ -24,7 +24,8 @@ export const updateProfile = (token,member) => {
 		headers: {
 			Accept: 'application/json',
 			Authorization: `Bearer ${token}`
-		}
+		},
+		body: member
 	})
 	.then(response=>{
 		return response.json()

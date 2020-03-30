@@ -21,6 +21,7 @@ export const getCookie = key => {
         return cookie.get(key);
     }
 };
+
 // localstorage
 export const setLocalStorage = (key, value) => {
     if (process.browser) {

@@ -28,13 +28,14 @@ const memberSchema = new mongoose.Schema({
 		type: String,
 		required: true
 	},
+	about: {
+		type: String,
+		default: ''
+	},
 	//hashed password is stored in db
 	hashed_password: {
 		type: String,
 		required: true
-	},
-	about: {
-		type: String,
 	},
 	role: {
 		type: String,
