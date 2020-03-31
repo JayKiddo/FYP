@@ -88,7 +88,7 @@ module.exports =
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 4);
+/******/ 	return __webpack_require__(__webpack_require__.s = 6);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -316,6 +316,61 @@ const listSearch = params => {
 
   return isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0___default()(`${_config__WEBPACK_IMPORTED_MODULE_1__["API"]}/journals/search?${query}`, {
     method: 'GET'
+  }).then(response => {
+    return response.json();
+  }).catch(error => console.log(error));
+};
+
+/***/ }),
+
+/***/ "./actions/member.js":
+/*!***************************!*\
+  !*** ./actions/member.js ***!
+  \***************************/
+/*! exports provided: getProfile, updateProfile, getProfileAndJournal */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getProfile", function() { return getProfile; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateProfile", function() { return updateProfile; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getProfileAndJournal", function() { return getProfileAndJournal; });
+/* harmony import */ var isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! isomorphic-fetch */ "isomorphic-fetch");
+/* harmony import */ var isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../config */ "./config.js");
+
+ //get member profile
+
+const getProfile = token => {
+  return isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0___default()(`${_config__WEBPACK_IMPORTED_MODULE_1__["API"]}/member/profile`, {
+    method: 'GET',
+    headers: {
+      Accept: 'application/json',
+      Authorization: `Bearer ${token}`
+    }
+  }).then(response => {
+    return response.json();
+  }).catch(error => console.log(error));
+};
+const updateProfile = (token, member) => {
+  return isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0___default()(`${_config__WEBPACK_IMPORTED_MODULE_1__["API"]}/member/update`, {
+    method: 'PUT',
+    headers: {
+      Accept: 'application/json',
+      Authorization: `Bearer ${token}`
+    },
+    body: member
+  }).then(response => {
+    return response.json();
+  }).catch(error => console.log(error));
+};
+const getProfileAndJournal = token => {
+  return isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0___default()(`${_config__WEBPACK_IMPORTED_MODULE_1__["API"]}/member/profile/journal`, {
+    method: 'GET',
+    headers: {
+      Accept: 'application/json',
+      Authorization: `Bearer ${token}`
+    }
   }).then(response => {
     return response.json();
   }).catch(error => console.log(error));
@@ -2586,6 +2641,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_Member__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../components/Member */ "./components/Member.js");
 /* harmony import */ var next_link__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! next/link */ "./node_modules/next/link.js");
 /* harmony import */ var next_link__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(next_link__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _actions_member__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../actions/member */ "./actions/member.js");
+/* harmony import */ var _actions_handleCookie__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../actions/handleCookie */ "./actions/handleCookie.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! moment */ "moment");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_6__);
 var _jsxFileName = "D:\\journalProject\\frontend\\pages\\member\\index.js";
 
 var __jsx = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement;
@@ -2593,135 +2652,347 @@ var __jsx = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement;
 
 
 
+
+
+
+
 const MemberDashboard = () => {
-  return __jsx(_components_Layout__WEBPACK_IMPORTED_MODULE_1__["default"], {
+  const {
+    0: member,
+    1: setMember
+  } = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])({});
+  const {
+    0: journals,
+    1: setJournals
+  } = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]);
+  const token = Object(_actions_handleCookie__WEBPACK_IMPORTED_MODULE_5__["getCookie"])('token');
+  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(() => {
+    loadProfileAndJournal();
+  }, []);
+  const {
+    username,
+    name,
+    createdAt
+  } = member;
+
+  const loadProfileAndJournal = () => {
+    Object(_actions_member__WEBPACK_IMPORTED_MODULE_4__["getProfileAndJournal"])(token).then(data => {
+      if (data.error) {
+        console.log(data.error);
+      } else {
+        setMember(data.member);
+        setJournals(data.journals);
+      }
+    });
+  };
+
+  const showMemberJournal = () => {
+    return journals.map((journal, index) => {
+      return __jsx("div", {
+        className: "mt-2 mb-2",
+        key: index,
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 35
+        },
+        __self: undefined
+      }, __jsx(next_link__WEBPACK_IMPORTED_MODULE_3___default.a, {
+        href: `/journals/${journal.slug}`,
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 36
+        },
+        __self: undefined
+      }, __jsx("a", {
+        className: "lead",
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 37
+        },
+        __self: undefined
+      }, journal.title)));
+    });
+  };
+
+  return __jsx(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, {
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 7
+      lineNumber: 45
+    },
+    __self: undefined
+  }, __jsx(_components_Layout__WEBPACK_IMPORTED_MODULE_1__["default"], {
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 46
     },
     __self: undefined
   }, __jsx(_components_Member__WEBPACK_IMPORTED_MODULE_2__["default"], {
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 8
+      lineNumber: 47
     },
     __self: undefined
   }, __jsx("div", {
     className: "container-fluid",
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 9
+      lineNumber: 48
     },
     __self: undefined
   }, __jsx("div", {
     className: "row",
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 10
+      lineNumber: 50
+    },
+    __self: undefined
+  }, __jsx("div", {
+    className: "col-md-12",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 51
+    },
+    __self: undefined
+  }, __jsx("div", {
+    className: "card",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 52
+    },
+    __self: undefined
+  }, __jsx("div", {
+    className: "card-body",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 53
+    },
+    __self: undefined
+  }, __jsx("div", {
+    className: "row",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 54
+    },
+    __self: undefined
+  }, __jsx("div", {
+    className: "col-md-8",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 55
+    },
+    __self: undefined
+  }, __jsx("h5", {
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 56
+    },
+    __self: undefined
+  }, name), __jsx("p", {
+    className: "text-muted",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 57
+    },
+    __self: undefined
+  }, "User joined ", moment__WEBPACK_IMPORTED_MODULE_6___default()(createdAt).fromNow())), __jsx("div", {
+    className: "col-md-4",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 59
+    },
+    __self: undefined
+  }, "Image Profile")))))), __jsx("br", {
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 67
+    },
+    __self: undefined
+  }), __jsx("div", {
+    className: "pb-5",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 69
+    },
+    __self: undefined
+  }, __jsx("div", {
+    className: "row",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 70
+    },
+    __self: undefined
+  }, __jsx("div", {
+    className: "col-md-6",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 71
+    },
+    __self: undefined
+  }, __jsx("div", {
+    className: "card",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 72
+    },
+    __self: undefined
+  }, __jsx("div", {
+    className: "card-body",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 73
+    },
+    __self: undefined
+  }, __jsx("h5", {
+    className: "card-title bg primary pt-4 pb-4 pl-4 pr-4",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 74
+    },
+    __self: undefined
+  }, "Recent journals"), showMemberJournal()))), __jsx("div", {
+    className: "col-md-6",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 79
+    },
+    __self: undefined
+  }, __jsx("div", {
+    className: "card",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 80
+    },
+    __self: undefined
+  }, __jsx("div", {
+    className: "card-body",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 81
+    },
+    __self: undefined
+  }, __jsx("h5", {
+    className: "card-title bg primary pt-4 pb-4 pl-4 pr-4 ",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 82
+    },
+    __self: undefined
+  }, "Statistics"), __jsx("div", {
+    className: "mt-2 mb-2",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 83
+    },
+    __self: undefined
+  }, journals.length, " journals created")))))), __jsx("div", {
+    className: "row",
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 93
     },
     __self: undefined
   }, __jsx("div", {
     className: "col-md-12 pt-5 pb-5",
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 11
+      lineNumber: 94
     },
     __self: undefined
   }, __jsx("h2", {
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 12
+      lineNumber: 95
     },
     __self: undefined
   }, "Member Dashboard")), __jsx("div", {
     className: "col-md-6",
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 14
+      lineNumber: 97
     },
     __self: undefined
   }, __jsx("ul", {
     className: "list-group",
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 15
+      lineNumber: 98
     },
     __self: undefined
   }, __jsx("li", {
     className: "list-group-item",
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 17
+      lineNumber: 100
     },
     __self: undefined
   }, __jsx(next_link__WEBPACK_IMPORTED_MODULE_3___default.a, {
     href: "/member/update",
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 18
+      lineNumber: 101
     },
     __self: undefined
   }, __jsx("a", {
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 19
+      lineNumber: 102
     },
     __self: undefined
   }, "Update Profile"))), __jsx("li", {
     className: "list-group-item",
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 23
+      lineNumber: 106
     },
     __self: undefined
   }, __jsx(next_link__WEBPACK_IMPORTED_MODULE_3___default.a, {
     href: "/member/journal",
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 24
+      lineNumber: 107
     },
     __self: undefined
   }, __jsx("a", {
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 25
+      lineNumber: 108
     },
     __self: undefined
   }, "Create Journal"))), __jsx("li", {
     className: "list-group-item",
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 29
+      lineNumber: 112
     },
     __self: undefined
   }, __jsx(next_link__WEBPACK_IMPORTED_MODULE_3___default.a, {
     href: "/member/journal-manage",
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 30
+      lineNumber: 113
     },
     __self: undefined
   }, __jsx("a", {
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 31
+      lineNumber: 114
     },
     __self: undefined
   }, "Update/Delete Journal"))))), __jsx("div", {
     className: "col-md-6",
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 37
+      lineNumber: 120
     },
     __self: undefined
-  }, "right")))));
+  }, "right"))))));
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (MemberDashboard);
 
 /***/ }),
 
-/***/ 4:
+/***/ 6:
 /*!*************************************!*\
   !*** multi ./pages/member/index.js ***!
   \*************************************/
@@ -2807,6 +3078,17 @@ module.exports = require("isomorphic-fetch");
 /***/ (function(module, exports) {
 
 module.exports = require("js-cookie");
+
+/***/ }),
+
+/***/ "moment":
+/*!*************************!*\
+  !*** external "moment" ***!
+  \*************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("moment");
 
 /***/ }),
 

@@ -125,7 +125,6 @@ const ProfileUpdate = () => {
 
 }
 
-
 export default ProfileUpdate
 
 //make req to backend to get member info

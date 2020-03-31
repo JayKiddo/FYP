@@ -32,3 +32,18 @@ export const updateProfile = (token,member) => {
 	})
 	.catch(error => console.log(error))
 }
+
+
+export const getProfileAndJournal = token => {
+	return fetch(`${API}/member/profile/journal`,{
+		method: 'GET',
+		headers: {
+			Accept: 'application/json',
+			Authorization: `Bearer ${token}`
+		}
+	})
+	.then(response => {
+		return response.json()
+	})
+	.catch(error=>console.log(error))
+}

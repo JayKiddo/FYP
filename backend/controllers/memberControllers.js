@@ -1,4 +1,5 @@
 const Member = require('../models/member')
+const Journal = require('../models/journal')
 const fs = require('fs')
 const _ = require('lodash')
 const formidable = require('formidable')
@@ -9,6 +10,27 @@ exports.read = (req,res) => {
 	req.profile.hashed_password = undefined
 	return res.json(req.profile)
 }
+
+exports.readMemberAndJournals = (req,res) => {
+	let member = req.profile
+	let memberId = member._id
+
+	Journal.find({author: memberId})
+	.select('-photo -categories -tags')
+	.exec((err,data)=>{
+		if(err){
+			return res.status(400).json({
+				error: error
+			})
+		}
+		member.photo = undefined
+		member.hashed_password = undefined
+		res.json({
+			member,
+			journals: data
+		})
+	})
+ } 
 
 exports.memberMiddleware =(req,res,next) => {
 	const memberId = req.user._id

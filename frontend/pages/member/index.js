@@ -1,12 +1,95 @@
 import Layout from '../../components/Layout'
 import Member from '../../components/Member'
 import Link from 'next/link'
+import {getProfileAndJournal} from '../../actions/member'
+import {useEffect,useState} from 'react'
+import {getCookie} from '../../actions/handleCookie'
+import moment from 'moment'
 
 const MemberDashboard = () => {
+	const [member,setMember] = useState({})
+	const [journals,setJournals] = useState([])
+
+	const token = getCookie('token')
+
+	useEffect(()=>{
+		loadProfileAndJournal()
+	},[])
+
+	const {username,name,createdAt} = member
+
+	const loadProfileAndJournal = () => {
+		getProfileAndJournal(token).then(data=>{
+			if(data.error){
+				console.log(data.error)
+			} else {
+				setMember(data.member)
+				setJournals(data.journals)
+			}
+		})
+	}
+
+	const showMemberJournal = () => {
+		return journals.map((journal,index)=>{
+			return (
+				<div className="mt-2 mb-2" key={index}>
+					<Link href={`/journals/${journal.slug}`}>
+						<a className="lead">{journal.title}</a>
+					</Link>
+				</div>
+			)
+		})
+	}
+
 	return (
+		<React.Fragment>
 		<Layout>
 			<Member>
 				<div className="container-fluid">
+
+					<div className="row">
+						<div className="col-md-12">
+							<div className="card">
+								<div className="card-body">
+									<div className="row">
+										<div className="col-md-8">
+											<h5>{name}</h5>
+											<p className="text-muted">User joined {moment(createdAt).fromNow()}</p>
+										</div>
+										<div className="col-md-4">
+											Image Profile
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<br/>
+
+					<div className="pb-5">
+					<div className="row">
+						<div className="col-md-6">
+							<div className="card">
+								<div className="card-body">
+									<h5 className="card-title bg primary pt-4 pb-4 pl-4 pr-4">Recent journals</h5>
+									{showMemberJournal()}
+								</div>
+							</div>
+						</div>
+						<div className="col-md-6">
+							<div className="card">
+								<div className="card-body">
+									<h5 className="card-title bg primary pt-4 pb-4 pl-4 pr-4 ">Statistics</h5>
+									<div className="mt-2 mb-2">{journals.length} journals created</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					</div>
+
+
+
+
 					<div className="row">
 						<div className="col-md-12 pt-5 pb-5">
 							<h2>Member Dashboard</h2>
@@ -41,7 +124,9 @@ const MemberDashboard = () => {
 				</div>
 			</Member>
 		</Layout> 
+		</React.Fragment>
 	)
 }
+
 
 export default MemberDashboard;
