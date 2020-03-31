@@ -47,3 +47,15 @@ export const logout = (next) => {
 	.catch(error => console.log(error));
 }
 
+export const updateMember = (member,next) => {
+	//checking if is it in the client side
+	if(process.browser){
+		if(localStorage.getItem('member')){
+			let oldMember = JSON.parse(localStorage.getItem('member'))
+			oldMember = member
+			localStorage.setItem('member',JSON.stringify(oldMember));
+			next()
+		}
+	}
+}
+

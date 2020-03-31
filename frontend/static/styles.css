@@ -11,3 +11,7 @@
 	max-height: 300px;
 	object-fit: cover;
 } 
+
+.profile-picture = {
+	border-radius: 50%;
+}

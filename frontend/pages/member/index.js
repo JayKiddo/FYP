@@ -5,6 +5,7 @@ import {getProfileAndJournal} from '../../actions/member'
 import {useEffect,useState} from 'react'
 import {getCookie} from '../../actions/handleCookie'
 import moment from 'moment'
+import {API} from '../../config'
 
 const MemberDashboard = () => {
 	const [member,setMember] = useState({})
@@ -57,7 +58,12 @@ const MemberDashboard = () => {
 											<p className="text-muted">User joined {moment(createdAt).fromNow()}</p>
 										</div>
 										<div className="col-md-4">
-											Image Profile
+											<img 
+												src={`${API}/member/photo/${username}`}
+												alt="User profile picture"
+												style={{maxWidth: '100%',maxHeight: '100%'}}
+												className="img img-fluid" 
+											/>
 										</div>
 									</div>
 								</div>
@@ -71,7 +77,7 @@ const MemberDashboard = () => {
 						<div className="col-md-6">
 							<div className="card">
 								<div className="card-body">
-									<h5 className="card-title bg primary pt-4 pb-4 pl-4 pr-4">Recent journals</h5>
+									<h5 className="card-title bg-primary pt-4 pb-4 pl-4 pr-4 text-light ">Recent journals</h5>
 									{showMemberJournal()}
 								</div>
 							</div>
@@ -79,7 +85,7 @@ const MemberDashboard = () => {
 						<div className="col-md-6">
 							<div className="card">
 								<div className="card-body">
-									<h5 className="card-title bg primary pt-4 pb-4 pl-4 pr-4 ">Statistics</h5>
+									<h5 className="card-title bg-primary pt-4 pb-4 pl-4 pr-4 text-light ">Statistics</h5>
 									<div className="mt-2 mb-2">{journals.length} journals created</div>
 								</div>
 							</div>
@@ -90,7 +96,7 @@ const MemberDashboard = () => {
 
 
 
-					<div className="row">
+					<div className="row pb-5" >
 						<div className="col-md-12 pt-5 pb-5">
 							<h2>Member Dashboard</h2>
 						</div>
@@ -118,7 +124,27 @@ const MemberDashboard = () => {
 							</ul>
 						</div>
 						<div className="col-md-6">
-							right
+								<ul className="list-group">
+
+								<li className="list-group-item">
+		  							<Link href="/member/update">
+		  								<a>A feature</a>
+		  							</Link>
+	  							</li>
+
+	  							<li className="list-group-item">
+		  							<Link href="/member/journal">
+		  								<a>A feature</a>
+		  							</Link>
+	  							</li>
+
+	  							<li className="list-group-item">
+		  							<Link href="/member/journal-manage">
+		  								<a>A feature</a>
+		  							</Link>
+	  							</li>
+
+							</ul>
 						</div>
 					</div>
 				</div>

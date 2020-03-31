@@ -117,6 +117,7 @@ exports.updateMember = (req,res) => {
 					})
 				}
 				member.hashed_password = undefined
+				member.photo = undefined
 				res.json(member)
 			})
 	})

@@ -4,6 +4,8 @@ import Router from 'next/router'
 import {getCookie,isLoggedIn} from '../../actions/handleCookie'
 import {getProfile,updateProfile} from '../../actions/member'
 import {API} from '../../config.js'
+import {updateMember} from '../../actions/auth'
+
 
 
 const ProfileUpdate = () => {
@@ -16,11 +18,12 @@ const ProfileUpdate = () => {
 		success: false,
 		photo:'',
 		about:'',
-		formData: '' 
+		formData: '',
+		usernameForPhoto: '' 
 	})	
 
 	const token = getCookie('token')
-	const {username,name,email,password,error,success,photo,formData,about} = values
+	const {username,name,email,password,error,success,photo,formData,about,usernameForPhoto} = values
 
 	const loadMemberProfile = () => {
 		getProfile(token).then(data=>{
@@ -28,7 +31,7 @@ const ProfileUpdate = () => {
 			if(data.error)  {
 				setValues({...values,error: data.error})
 			} else { 
-				setValues({...values,username: data.username,name: data.name,email: data.email,about: data.about,formData: new FormData()})
+				setValues({...values,username: data.username,name: data.name,email: data.email,about: data.about,usernameForPhoto: data.username,formData: new FormData()})
 			}
 		})
 	}
@@ -50,7 +53,9 @@ const ProfileUpdate = () => {
 			if(data.error){
 				setValues({...values,error: data.error,success: false})
 			} else {
-				setValues({...values,username: data.username,name: data.name,email: data.email,about: data.about, formData: new FormData(),success:true })
+				updateMember(data,()=>{
+					setValues({...values,username: data.username,name: data.name,email: data.email,about: data.about, formData: new FormData(),success:true })
+				})
 			}
 		})
 	}
@@ -64,7 +69,7 @@ const ProfileUpdate = () => {
 	const showProfileForm = () => {
 		return <form onSubmit={handleSubmit}>
 			<div className="form-group">
-				<label className="btn btn-outline-info">
+				<label className="btn btn-outline-info mt-2">
 					Profile Photo
 	       			<input onChange={handleChange('photo')} type="file" accept="images/*" hidden/> 
 	   			</label>
@@ -108,9 +113,9 @@ const ProfileUpdate = () => {
 				<div className="row">
 					<div className="col-md-4">
 						<img 
-							src={`${API}/member/photo/${username}`} 
-							className="img img-fluid"
-							style={{maxHeight: 'auto',maxWidth: '100%'}}
+							src={`${API}/member/photo/${usernameForPhoto}`} 
+							className="img img-fluid img-thumbnail "
+							style={{maxHeight: '100%',maxWidth: '100%'}}
 							alt="user profile picture"
 						/>
 					</div>

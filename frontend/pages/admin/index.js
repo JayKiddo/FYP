@@ -16,6 +16,13 @@ const AdminDashboard = () => {
 	  								<a>View Profile</a>
 	  							</Link>
   							</li>
+
+  							<li className="list-group-item">
+	  							<Link href="/member/update">
+	  								<a>Update Profile</a>
+	  							</Link>
+  							</li>
+
   							<li className="list-group-item">
 	  							<Link href="/admin/category-tag">
 	  								<a>Create Category</a>

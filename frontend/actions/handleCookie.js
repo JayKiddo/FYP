@@ -55,13 +55,3 @@ export const isLoggedIn = () => {
     }
 };
 
-export const updateMember = (member, next) => {
-    if (process.browser) {
-        if (localStorage.getItem('member')) {
-            let auth = JSON.parse(localStorage.getItem('member'));
-            auth = member;
-            localStorage.setItem('member', JSON.stringify(auth));
-            next();
-        }
-    }
-};
