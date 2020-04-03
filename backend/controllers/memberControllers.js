@@ -40,6 +40,13 @@ exports.memberMiddleware =(req,res,next) => {
 				error: 'Please log in to access this feature'
 			})
 		}
+
+		if(member.role !== 'member'){
+			return res.status(400).json({
+				error: 'This feature is for Member'
+			})
+		} 
+
 		req.profile = member
 		next()
 	})

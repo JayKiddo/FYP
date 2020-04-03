@@ -7,7 +7,7 @@ import { listJournalForManage,deleteJournal,updateJournal } from '../../actions/
 import renderHTML from 'react-render-html'
 import moment from 'moment'
 
-const ManageJournal = () => {
+const ManageJournal = ({username,role}) => {
 
 	const [journals,setJournals] = useState([])
 	const [message,setMessage] = useState('')
@@ -19,7 +19,7 @@ const ManageJournal = () => {
 	},[])
 
 	const loadJournals = () => {
-		listJournalForManage().then(data=>{
+		listJournalForManage(username).then(data=>{
 			if(data.error){
 				console.log(data.error)
 			} else {

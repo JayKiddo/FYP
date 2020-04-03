@@ -1,6 +1,7 @@
 import fetch from 'isomorphic-fetch';
 import { API } from '../config';
 import queryString from 'query-string'
+import {isLoggedIn} from './handleCookie'
 
 export const listJournals = (skip,limit) => {
     //skip and limit are sent from client side
@@ -24,7 +25,16 @@ export const listJournals = (skip,limit) => {
 };
 
 export const createJournal = (journal, token) => {
-    return fetch(`${API}/journal`, {
+
+    let endPoint 
+
+    if(isLoggedIn() && isLoggedIn().role === "admin"){
+        endPoint = `${API}/journal`
+    } else if (isLoggedIn() && isLoggedIn().role === "member"){
+        endPoint = `${API}/member/journal`
+    }
+
+    return fetch(`${endPoint}`, {
         method: 'POST',
         headers: {
             Accept: 'application/json',
@@ -37,6 +47,9 @@ export const createJournal = (journal, token) => {
         })
         .catch(error => console.log(error));
 };
+
+
+
 
 export const readJournal = slug => {
     return fetch(`${API}/journal/${slug}`,{
@@ -65,18 +78,17 @@ export const listRelatedJournal = (journal) => {
         .catch(error => console.log(error));
 };
 
-export const listJournalForManage = () => {
-    return fetch(`${API}/journals`,{
-        method: 'GET'
-    })
-    .then(response => {
-        return response.json();
-    })
-    .catch(error=>console.log(error))
-}
-
 export const deleteJournal = (slug,token) => {
-    return fetch(`${API}/journal/${slug}`,{
+
+    let endPoint
+
+    if(isLoggedIn() && isLoggedIn().role === "admin"){
+        endPoint = `${API}/journal/${slug}`
+    } else if (isLoggedIn() && isLoggedIn().role === "member") {
+        endPoint = `${API}/member/journal/${slug}`
+    }
+    
+    return fetch(endPoint,{
         method: 'DELETE',
         headers: {
             Accept: 'application/json',
@@ -91,6 +103,15 @@ export const deleteJournal = (slug,token) => {
 }
 
 export const updateJournal = (journal,token,slug) => {
+
+/*    let endPoint
+
+    if(isLoggedIn() && isLoggedIn().role === "admin"){
+        endPoint = `${API}/journal/${slug}`
+    } else if (isLoggedIn() && isLoggedIn().role === "member") {
+        endPoint = `${API}/member/journal/${slug}`
+    }*/
+
     return fetch(`${API}/journal/${slug}`, {
         method: 'PUT',
         headers: {
@@ -118,5 +139,18 @@ export const listSearch = (params) => {
         return response.json()
     })
     .catch(error=> console.log(error))
+}
+
+export const listJournalForManage = (username) => {
+
+   /* `${API}/${username}/journals`*/
+
+    return fetch(`${API}/journals`,{
+        method: 'GET'
+    })
+    .then(response => {
+        return response.json();
+    })
+    .catch(error=>console.log(error))
 }
 

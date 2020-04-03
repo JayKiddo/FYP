@@ -77,6 +77,28 @@ exports.requireLogIn = expressJwt({
 	//make member available in request object 
 })
 
+//improve security for member
+//authenticate member for amending journals
+exports.verifyMemberId = (req,res,next) => {
+	const slug = req.params.slug
+	Journal.findOne({slug}).then((err,journal)=>{
+		if(err){
+			return res.status(400).json({
+				error: err
+			})
+		}
+		let authentication = journal.author._id.toString() === req.profile._id.toString()
+		if(authentication === false){
+			return res.status(400).json({
+				error: "You are not authorized"
+			})
+		}
+		next()
+	})
+}
+
+
+
 
 
 

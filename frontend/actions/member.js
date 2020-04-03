@@ -1,10 +1,21 @@
 import fetch from 'isomorphic-fetch'
 import {API} from '../config'
+import {isLoggedIn} from './handleCookie'
+
 
 
 //get member profile
 export const getProfile = token => {
-	return fetch(`${API}/member/profile`,{
+
+	let endPoint 
+
+	 if(isLoggedIn() && isLoggedIn().role === "admin"){
+	 	endPoint = `${API}/admin/profile`
+	 } else if(isLoggedIn() && isLoggedIn().role === "member"){
+	 	endPoint = `${API}/member/profile`
+	 }
+
+	return fetch(endPoint,{
 		method: 'GET',
 		headers: {
 			Accept: 'application/json',
@@ -35,7 +46,16 @@ export const updateProfile = (token,member) => {
 
 
 export const getProfileAndJournal = token => {
-	return fetch(`${API}/member/profile/journal`,{
+
+	let endPoint 
+
+	 if(isLoggedIn() && isLoggedIn().role === "admin"){
+	 	endPoint = `${API}/admin/profile/journal`
+	 } else if(isLoggedIn() && isLoggedIn().role === "member"){
+	 	endPoint = `${API}/member/profile/journal`
+	 }
+
+	return fetch(endPoint,{
 		method: 'GET',
 		headers: {
 			Accept: 'application/json',

@@ -7,44 +7,42 @@ import { listCategory } from '../../actions/category';
 import { listTag } from '../../actions/tag';
 import { createJournal,readJournal,updateJournal } from '../../actions/journal';
 import dynamic from 'next/dynamic';
-import {API} from '../../config';
+import { API } from '../../config';
 
-
-//Quill does not suppport SSR, so it's only loaded and rendered in the browser.
-const ReactQuill = dynamic(() => import('react-quill'), { ssr: false }); 
+//this modules will be imported dynamically
+const ReactQuill = dynamic(() => import('react-quill'), { ssr: false }); //making sure that react quill only runs in frontend
 
 const AmendJournal = ({router}) => {
 
     const [categories, setCategories] = useState([]);
     const [tags, setTags] = useState([]);
 
-    const [checkedCategory, setCheckedCategory] = useState([]); // categories
-    const [checkedTag, setCheckedTag] = useState([]); // tags
+    const [checkedCategory, setCheckedCategory] = useState([]); 
+    const [checkedTag, setCheckedTag] = useState([]); 
 
-    const [content,setContent] = useState({})
+    const [content,setContent] = useState('')
     const [values,setValues] = useState({
         error: '',
-        sizeError:'',
-        status:'',
+        success:'',
         formData: '',
         title: ''
     })
 
-    const {title,error,status,formData} = values;
+    const {error,success,formData,title} = values
     const token = getCookie('token'); 
 
     useEffect(()=>{
-        //use browser method to create form data
-        setValues({...values,formData: new FormData()}),
-        loadJournal(),
-        loadCategories(),
+        setValues({...values,formData: new FormData()})
+        loadJournal()
+        loadCategories()
         loadTags()
     },[router])
-    //re-render when router changes
+
 
     const loadJournal = () => {
-        if(router.query.slug){
-            readJournal(router.query.slug).then(data=>{
+        const slug = router.query.slug
+        if(slug){
+            readJournal(slug).then(data=>{
                 if(data.error){
                     console.log(data.error)
                 } else {
@@ -57,7 +55,7 @@ const AmendJournal = ({router}) => {
         }
     }
 
-    const loadCategories = () => {
+      const loadCategories = () => {
         listCategory().then(data => {
             if (data.error) {
                 setValues({ ...values, error: data.error });
@@ -77,7 +75,7 @@ const AmendJournal = ({router}) => {
         });
     };
 
-    const loadCheckedCategories = categories => {
+        const loadCheckedCategories = categories => {
         let oldCategories = []
         categories.map((category)=>{
             oldCategories.push(category._id)
@@ -115,37 +113,43 @@ const AmendJournal = ({router}) => {
          }
     }
 
-     const handleChange = name => event => {
-        const value = name === 'photo' ? event.target.files[0] : event.target.value;
-        formData.set(name, value);
-        setValues({ ...values, [name]: value, formData, error: '' });
-    };
-
     const handleContent = event => {
-        setValues({...values,error:''})
         setContent(event)
         formData.set('content', event)
     }
 
+    const setData = () => {
+        formData.set("title",title)
+        formData.set("content",content)
+        formData.set("categories",checkedCategory)
+        formData.set("tags",checkedTag)
+    }
+
     const editJournal = event => {
         event.preventDefault()
-        //update journal with formData,token,slug
+        setData()
         updateJournal(formData,token,router.query.slug).then(data=>{
-            if(data.error){
+            if(data.error) {
                 setValues({...values,error: data.error})
             } else {
-                setValues({...values,title: '',status: `Journal titled ${data.title} has been updated`})
-                if(isLoggedIn() && isLoggedIn().role === "admin"){
+                setValues({...values,title: '',success: `Journal titled ${data.title} is updated`})
+                if(isLoggedIn() && isLoggedIn().role === 'admin'){
                     Router.replace(`/admin/${router.query.slug}`)
-                } else if(isLoggedIn() && isLoggedIn().role === "member"){
+                } else if (isLoggedIn() && isLoggedIn().role === 'member'){
                     Router.replace(`/member`)
-                }       
+                }
             }
         })
     }
 
 
-     const handleCheckCategory = category => () => {
+  const handleChange = name => event => {
+        const value = name === 'photo' ? event.target.files[0] : event.target.value;
+        formData.set(name, value);
+        setValues({ ...values, [name]: value, formData, error: '' });
+    };
+
+    const handleCheckCategory = category => () => {
         setValues({ ...values, error: '' });
         // return the first index or -1
         const clickedCategory = checkedCategory.indexOf(category);
@@ -165,24 +169,25 @@ const AmendJournal = ({router}) => {
      const handleCheckTag = tag => () => {
         setValues({ ...values, error: '' });
         // return the first index or -1
-        const clickedTag = checkedTag.indexOf(tag);
+        const clickedTag = checkedTag.indexOf(tag);  //finding index of that tag
+        console.log(clickedTag);
         const all = [...checkedTag];
 
-        if (clickedTag === -1){
-            all.push(tag)
+        if (clickedTag === -1) { //if that tag is not in checkedTag array
+            all.push(tag);  //push tag
         } else {
-            all.splice(clickedTag, 1)   
+            all.splice(clickedTag, 1);
         }
-        console.log(all)
-        setCheckedTag(all)
-        formData.set('tags',all)
+        console.log(all);
+        setCheckedTag(all); //update state
+        formData.set('tags', all);
     };
 
      const showCategories = () => {
         return (
             categories.map((category, index) => (
                 <li key={index} className="list-unstyled">
-                    <input onChange={handleCheckCategory(category._id)} checked={checkOldCategories(category._id)} type="checkbox" className="mr-2" />
+                    <input onChange={handleCheckCategory(category._id)} checked={checkOldCategories(category._id)}  type="checkbox" className="mr-2" />
                     <label className="form-check-label">{category.name}</label>
                 </li>
             ))
@@ -201,8 +206,8 @@ const AmendJournal = ({router}) => {
     }
 
     const showStatus = () => {
-        if(status){
-            return <div className="alert alert-success">{status}</div>
+        if(success){
+            return <div className="alert alert-success">{success}</div>
         } else if(error){
             return <div className="alert alert-danger">{error}</div>
         }
@@ -225,7 +230,7 @@ const AmendJournal = ({router}) => {
                     formats={AmendJournal.formats} 
                     value={content} 
                     placeholder="Write something..."
-                    onChange={handleContent} />
+                    onChange = {handleContent} />
                 </div>
 
                 <div>
@@ -237,29 +242,33 @@ const AmendJournal = ({router}) => {
         );
     };
 
-    return <div className="container-fluid">
-                <div className="row">
 
-                    <div className="col-md-8">
-                        {showStatus()}
-                    </div>
+    return ( 
+        <div className="container-fluid">
+            <div className="row">
+                <div className="col-md-8">
+                    {showStatus()}
+                </div>
 
-                    <div className="col-md-8">
-                       {updateJournalForm()}
-                    </div>
 
-                    <div className="col-md-8">
-                     
-                        <img style={{ width: '100%' }} src={`${API}/journal/photo/${router.query.slug}`} alt={title} />
-                    
-                     </div>
+                <div className="col-md-8">
+                {content && (
+                    <img className="center" style={{ width: 'auto',height: 'auto' }} src={`${API}/journal/photo/${router.query.slug}`} alt={title} />
+                    )}
+                </div>
 
-                    <div className="col-md-4">
+                <div className="col-md-8">
+                    {updateJournalForm()}
+                </div>
+
+                 <div className="col-md-4">
                         <div className="form-group pb-2">
                             <h5>Featured Image</h5>
                             <hr/>
                             <small className="text-muted">Maximum Size: 1MB</small>
-                            <label className="btn btn-outline-info">Change Featured Image
+                            <br/>
+                            <label className="btn btn-outline-info">
+                                <p>Change Featured Image</p>
                                 <input onChange={handleChange('photo')} type="file" accept="images/*" hidden/> 
                             </label>
                         </div>
@@ -271,8 +280,9 @@ const AmendJournal = ({router}) => {
                         <hr/>
                         <ul style={{map: '100px',overflowY:'scroll'}}>{showTags()}</ul>
                     </div>
-             </div>
+            </div>
         </div>
+    )
 }
 
 AmendJournal.modules = {

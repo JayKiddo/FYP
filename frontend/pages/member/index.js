@@ -45,7 +45,7 @@ const MemberDashboard = () => {
 	return (
 		<React.Fragment>
 		<Layout>
-			<Member>
+
 				<div className="container-fluid">
 
 					<div className="row">
@@ -61,7 +61,7 @@ const MemberDashboard = () => {
 											<img 
 												src={`${API}/member/photo/${username}`}
 												alt="User profile picture"
-												style={{maxWidth: '100%',maxHeight: '100%'}}
+												style={{maxWidth: '100%',height: '250px'}}
 												className="img img-fluid" 
 											/>
 										</div>
@@ -148,7 +148,7 @@ const MemberDashboard = () => {
 						</div>
 					</div>
 				</div>
-			</Member>
+
 		</Layout> 
 		</React.Fragment>
 	)

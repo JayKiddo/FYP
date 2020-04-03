@@ -5,7 +5,7 @@ const fs = require('fs');
 const Journal = require('../models/journal');
 const Category = require('../models/category');
 const Tag = require('../models/tag');
-
+const Member = require('../models/member');
 const _ = require('lodash');
 
 exports.listJournal = (req,res) => {
@@ -138,7 +138,7 @@ exports.updateJournal = (req,res) => {
             });
         }
 
-        const { title, content, categories, tags ,metadesc } = fields
+        const { title, content, categories, tags } = fields
 
 
         if (!title || !title.length) {
@@ -176,7 +176,6 @@ exports.updateJournal = (req,res) => {
 
         if(content){
             oldJournal.democontent = content.substring(0, 250) + ' ...';
-            oldJournal.metadesc = stripHtml(content.substring(0, 250)) + ' ...';
         }
 
          if(categories){
@@ -321,7 +320,7 @@ exports.showPhoto = (req,res) => {
     .select('photo')
     .exec((error,journal)=>{
         if(error){
-            return res.status(400).json({
+            return res.status(400).json({  
                 error: error
             })
         }
@@ -329,8 +328,8 @@ exports.showPhoto = (req,res) => {
         res.set('Content-Type',journal.photo.contentType)
         res.send(journal.photo.data)
     })
-}
-
+} 
+  
 exports.listRelatedJournals = (req,res) => {
     const {_id,categories} = req.body.journal
 
@@ -365,3 +364,26 @@ exports.listSearch = (req,res) => {
     }
 }
 
+exports.listJournalByUsername = (req,res) => {
+    const username = req.params.username
+    Member.findOne({username: username}).exec((err,member)=>{
+        if(err){
+            return res.status(400).json({
+                error: err
+            })
+        }
+        Journal.find({author: member._id})
+        .populate('categories','_id name slug')
+        .populate('tags','_id name slug')
+        .populate('author','_id name username')
+        .select('_id title slug createdAt updatedAt')
+        .exec((err,journals)=>{
+            if(err){
+                return res.status(400).json({
+                    error: err
+                })
+            }
+            res.json(journals)
+        })
+    })
+}
