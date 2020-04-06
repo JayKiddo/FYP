@@ -1,6 +1,6 @@
 
 //Information is derived from request body
-
+const Journal = require('../models/journal')
 const Member = require('../models/member')
 const shortId = require('shortId')
 const jwt = require('jsonwebtoken')
@@ -50,7 +50,7 @@ exports.login = (req,res) => {
 				error: "Wrong email or password"
 			});
 		}
-		//generate json web token and send to client ???
+		//generate json web token and send to client 
 		const token = jwt.sign({ _id: member._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
 		//save this token in cookie
 		res.cookie('token', token, { expiresIn: '1d' });
@@ -80,15 +80,15 @@ exports.requireLogIn = expressJwt({
 //improve security for member
 //authenticate member for amending journals
 exports.verifyMemberId = (req,res,next) => {
-	const slug = req.params.slug
-	Journal.findOne({slug}).then((err,journal)=>{
+	const slug = req.params.slug.toLowerCase();
+	Journal.findOne({slug}).exec((err,journal)=>{
 		if(err){
 			return res.status(400).json({
 				error: err
 			})
 		}
 		let authentication = journal.author._id.toString() === req.profile._id.toString()
-		if(authentication === false){
+		if(!authentication){
 			return res.status(400).json({
 				error: "You are not authorized"
 			})
@@ -96,6 +96,9 @@ exports.verifyMemberId = (req,res,next) => {
 		next()
 	})
 }
+
+
+
 
 
 
