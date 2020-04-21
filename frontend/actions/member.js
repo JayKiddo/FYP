@@ -1,6 +1,7 @@
 import fetch from 'isomorphic-fetch'
 import {API} from '../config'
 import {isLoggedIn} from './handleCookie'
+import {handleTokenExpiry} from './auth'
 
 
 
@@ -23,6 +24,7 @@ export const getProfile = token => {
 		}
 	})
 	.then(response=>{
+		handleTokenExpiry(response)
 		return response.json()
 	})
 	.catch(error => console.log(error))
@@ -30,7 +32,16 @@ export const getProfile = token => {
 
 
 export const updateProfile = (token,member) => {
-	return fetch(`${API}/member/update`,{
+
+	let endPoint 
+
+	 if(isLoggedIn() && isLoggedIn().role === "admin"){
+	 	endPoint = `${API}/admin/update`
+	 } else if(isLoggedIn() && isLoggedIn().role === "member"){
+	 	endPoint = `${API}/member/update`
+	 }
+
+	return fetch(`${API}/admin/update`,{
 		method: 'PUT',
 		headers: {
 			Accept: 'application/json',
@@ -39,6 +50,7 @@ export const updateProfile = (token,member) => {
 		body: member
 	})
 	.then(response=>{
+		handleTokenExpiry(response)
 		return response.json()
 	})
 	.catch(error => console.log(error))
@@ -63,6 +75,7 @@ export const getProfileAndJournal = token => {
 		}
 	})
 	.then(response => {
+		handleTokenExpiry(response)
 		return response.json()
 	})
 	.catch(error=>console.log(error))

@@ -4,7 +4,7 @@ import Link from 'next/link'
 import ProfileUpdate from '../../components/Profile/ProfileUpdate'
 
 const AdminProfileUpdate = () => {
-	return (
+	return (	
 		<Layout>
 			<Admin>
 				<div className="container-fluid">

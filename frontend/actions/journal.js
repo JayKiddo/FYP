@@ -1,7 +1,8 @@
-import fetch from 'isomorphic-fetch';
+ import fetch from 'isomorphic-fetch';
 import { API } from '../config';
 import queryString from 'query-string'
 import {isLoggedIn} from './handleCookie'
+import {handleTokenExpiry} from './auth'
 
 export const listJournals = (skip,limit) => {
     //skip and limit are sent from client side
@@ -43,6 +44,7 @@ export const createJournal = (journal, token) => {
         body: journal
     })
         .then(response => {
+            handleTokenExpiry(response)
             return response.json();
         })
         .catch(error => console.log(error));
@@ -97,6 +99,7 @@ export const deleteJournal = (slug,token) => {
         }
     })
     .then(response=>{
+        handleTokenExpiry(response)
         return response.json()
     })
     .catch(error => console.log(error))
@@ -104,15 +107,15 @@ export const deleteJournal = (slug,token) => {
 
 export const updateJournal = (journal,token,slug) => {
 
-/*    let endPoint
+    let endPoint
 
     if(isLoggedIn() && isLoggedIn().role === "admin"){
         endPoint = `${API}/journal/${slug}`
     } else if (isLoggedIn() && isLoggedIn().role === "member") {
         endPoint = `${API}/member/journal/${slug}`
-    }*/
+    }
 
-    return fetch(`${API}/journal/${slug}`, {
+    return fetch(endPoint, {
         method: 'PUT',
         headers: {
             Accept: 'application/json',
@@ -121,6 +124,7 @@ export const updateJournal = (journal,token,slug) => {
         body: journal
     })
         .then(response => {
+            handleTokenExpiry(response)
             return response.json();
         })
         .catch(error => console.log(error));
@@ -143,9 +147,7 @@ export const listSearch = (params) => {
 
 export const listJournalForManage = (username) => {
 
-   /* `${API}/${username}/journals`*/
-
-    return fetch(`${API}/journals`,{
+    return fetch(`${API}/${username}/journals`,{
         method: 'GET'
     })
     .then(response => {

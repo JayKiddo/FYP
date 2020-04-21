@@ -2,15 +2,31 @@
 
 const express = require('express');
 const router = express.Router();
-const {register,login,logout} = require('../controllers/authenticateControllers');
-const {requireLogIn} = require('../controllers/authenticateControllers');
+const {
+	register,
+	login,
+	logout,
+	requireLogIn,
+	forgotPassword,
+	resetPassword,
+	validateAccount
+	} = require('../controllers/authenticateControllers');
+
 
 
 const {runValidation} =  require('../validators/index');
-const {memberRegisterValidator} = require('../validators/validate');
-const {memberLoginValidator} = require('../validators/validate');
 
-router.post('/register', memberRegisterValidator, runValidation, register);
+const {
+	memberRegisterValidator,
+	memberLoginValidator,
+	forgotPasswordValidator,
+	resetPasswordValidator
+	} = require('../validators/validate');
+
+router.post('/account-validation',memberRegisterValidator, runValidation,validateAccount)
+router.post('/register',register);
+
+
 router.post('/login', memberLoginValidator, runValidation, login);
 router.get('/logout',logout);
 
@@ -20,6 +36,9 @@ router.get('/secret',requireLogIn,(req,res)=>{
 		member: req.user
 	});
 });
+
+router.put('/forgot-password',forgotPasswordValidator,runValidation,forgotPassword)
+router.put('/reset-password',resetPasswordValidator,runValidation,resetPassword)
 
 
 module.exports = router

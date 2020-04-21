@@ -12,7 +12,7 @@ const UpdateJournal = () => {
                         <div className="col-md-12 pt-5 pb-5">
                             <h2>Update journal</h2>
                         </div>
-                        <div className="col-md-6">
+                        <div className="col-md-12">
                             <AmendJournal />
                         </div>
                     </div>

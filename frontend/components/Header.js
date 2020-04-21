@@ -38,13 +38,15 @@ const Header = () => {
         <Collapse isOpen={isOpen} navbar>
           <Nav className="mr-auto" navbar>
 
-            <React.Fragment>
+          {isLoggedIn() && (
+             <React.Fragment>
              <NavItem>
               <Link href="/journals">
               <NavLink style={{cursor: 'pointer'}}>Journals</NavLink>
               </Link>
             </NavItem>
             </React.Fragment>
+          )}
 
           {!isLoggedIn() && (
             <React.Fragment>
@@ -63,13 +65,13 @@ const Header = () => {
             </NavItem>
             </React.Fragment>
             )}  
-          </Nav>
 
-          <Nav>
           {isLoggedIn() && isLoggedIn().role === 'member' && (
               <NavItem>
               <Link href="/member">
-              <NavLink style={{cursor: 'pointer'}}> {`Member's Dashboard`}</NavLink>
+              <NavLink style={{cursor: 'pointer'}}> 
+                {`Member's Dashboard`}
+              </NavLink>
               </Link>              
             </NavItem>
             )}
@@ -77,7 +79,9 @@ const Header = () => {
               {isLoggedIn() && isLoggedIn().role === 'admin' && (
               <NavItem>
               <Link href="/admin">
-              <NavLink> {`${isLoggedIn().name}'s Dashboard`}</NavLink>
+              <NavLink> 
+              {`${isLoggedIn().name}'s Dashboard`}
+              </NavLink>
               </Link>              
             </NavItem>
             )}
@@ -89,6 +93,15 @@ const Header = () => {
               </NavLink>              
             </NavItem>
             )}
+
+            <NavItem>
+              <Link href="/about">
+              <NavLink style={{cursor: 'pointer'}} >
+                About
+              </NavLink>
+              </Link>              
+            </NavItem>
+
           </Nav>
         </Collapse>
       </Navbar>

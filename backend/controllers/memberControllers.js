@@ -107,7 +107,7 @@ exports.updateMember = (req,res) => {
 		member = _.extend(member,fields)
 
 		if(files.photo) {
-			if(files.photo.size > 100000) {
+			if(files.photo.size > 10000000) {
 				return res.status(400).json({
 					error: 'Image size should be less than 1MB'
 				})
@@ -115,6 +115,11 @@ exports.updateMember = (req,res) => {
 			member.photo.data = fs.readFileSync(files.photo.path)
 			member.photo.contentType = files.photo.type
 		}
+
+		/*if(files.photo){
+			member.photo.data = fs.readFileSync(files.photo.path)
+			member.photo.contentType = files.photo.type
+		}*/
 
 
 			member.save((error,result)=>{

@@ -136,7 +136,7 @@ const AmendJournal = ({router}) => {
                 if(isLoggedIn() && isLoggedIn().role === 'admin'){
                     Router.replace(`/admin/${router.query.slug}`)
                 } else if (isLoggedIn() && isLoggedIn().role === 'member'){
-                    Router.replace(`/member`)
+                    Router.replace(`/member/${router.query.slug}`)
                 }
             }
         })
@@ -205,13 +205,7 @@ const AmendJournal = ({router}) => {
         );
     }
 
-    const showStatus = () => {
-        if(success){
-            return <div className="alert alert-success">{success}</div>
-        } else if(error){
-            return <div className="alert alert-danger">{error}</div>
-        }
-    }
+   
 
     const updateJournalForm = () => {
         return (
@@ -246,14 +240,9 @@ const AmendJournal = ({router}) => {
     return ( 
         <div className="container-fluid">
             <div className="row">
-                <div className="col-md-8">
-                    {showStatus()}
-                </div>
-
-
-                <div className="col-md-8">
+                 <div className="col-md-8">
                 {content && (
-                    <img className="center" style={{ width: 'auto',height: 'auto' }} src={`${API}/journal/photo/${router.query.slug}`} alt={title} />
+                    <img className="img img-fluid featured-photo" style={{ width: '50%' }} src={`${API}/journal/photo/${router.query.slug}`} alt={title} />
                     )}
                 </div>
 

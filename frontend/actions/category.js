@@ -1,5 +1,6 @@
 import fetch from 'isomorphic-fetch'
 import {API} from '../config'
+import {handleTokenExpiry} from './auth'
 
 //create new category
 export const createCategory = (category,token) => {
@@ -13,6 +14,7 @@ export const createCategory = (category,token) => {
 		body: JSON.stringify(category) //stringify javascript object
 	})
 	.then(response => {
+		handleTokenExpiry(response)
 		return response.json()
 	})
 	.catch(error => console.log(error))
@@ -48,6 +50,7 @@ export const deleteCategory = (slug,token) => {
 		}
 	})
 	.then(response => {
+		handleTokenExpiry(response)
 		return response.json()
 	})
 	.catch(error => console.log(error))

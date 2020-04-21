@@ -53,8 +53,11 @@ const ManageJournal = ({username,role}) => {
 	}
 
 	const showUpdateButton = (journal) => {
+
+		let updateLink = role === 'admin' ? `/admin/${journal.slug}` : `/member/${journal.slug}`
+
 		return (
-			<Link href={`/admin/${journal.slug}`}>
+			<Link href={updateLink}>
 				<a className="btn btn-sm btn-warning ml-2">Update</a>
 			</Link>
 		)

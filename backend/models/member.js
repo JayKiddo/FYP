@@ -24,10 +24,6 @@ const memberSchema = new mongoose.Schema({
 		unique: true,
 		max: 32
 	},
-	profileURL: {
-		type: String,
-		required: true
-	},
 	about: {
 		type: String,
 		default: ''

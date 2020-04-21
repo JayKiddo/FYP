@@ -19,8 +19,11 @@ const ProfileUpdate = () => {
 		photo:'',
 		about:'',
 		formData: '',
-		usernameForPhoto: '' 
+		usernameForPhoto: '',
+		imgSrc: "" 
 	})	
+
+	const [image,setImage] = useState("")
 
 	const token = getCookie('token')
 	const {username,name,email,password,error,success,photo,formData,about,usernameForPhoto} = values
@@ -31,7 +34,17 @@ const ProfileUpdate = () => {
 			if(data.error)  {
 				setValues({...values,error: data.error})
 			} else { 
-				setValues({...values,username: data.username,name: data.name,email: data.email,about: data.about,usernameForPhoto: data.username,formData: new FormData()})
+				setValues({
+					...values,
+					username: data.username,
+					name: data.name,
+					email: data.email,
+					about: data.about,
+					usernameForPhoto: data.username,
+					formData: new FormData()
+				})
+				setImage(`${API}/member/photo/${data.username}`)
+				Router.push('/admin/update')
 			}
 		})
 	}
@@ -50,11 +63,22 @@ const ProfileUpdate = () => {
 		event.preventDefault()
 		setData()
 		updateProfile(token,formData).then(data=>{
+			console.log(data)
 			if(data.error){
 				setValues({...values,error: data.error,success: false})
 			} else {
 				updateMember(data,()=>{
-					setValues({...values,username: data.username,name: data.name,email: data.email,about: data.about, formData: new FormData(),success:true })
+					setValues({
+						...values,
+						username: data.username,
+						name: data.name,
+						email: data.email,
+						about: data.about, 
+						formData: new FormData(),
+						success:true
+					})
+					setImage(`${API}/member/photo/${data.username}`)
+					loadMemberProfile()
 				})
 			}
 		})
@@ -113,7 +137,7 @@ const ProfileUpdate = () => {
 				<div className="row">
 					<div className="col-md-4">
 						<img 
-							src={`${API}/member/photo/${usernameForPhoto}`} 
+							src={image} 
 							className="img img-fluid img-thumbnail "
 							style={{maxHeight: '100%',maxWidth: '100%'}}
 							alt="user profile picture"

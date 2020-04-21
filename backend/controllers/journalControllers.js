@@ -264,6 +264,8 @@ exports.createJournal = (req, res) => {
         journal.metadesc = stripHtml(content.substring(0, 160)); 
         journal.author = req.user._id; //received from requireLogIn
 
+        console.log(req.user)
+
         let arrayOfCategories = categories && categories.split(',');
         let arrayOfTags = tags && tags.split(',');
 

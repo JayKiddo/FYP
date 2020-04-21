@@ -48,7 +48,6 @@ const SingleJournal = ({journal}) => {
 									style={{maxHeight: '150px',width: 'auto'}} 
 									//making request to photo routes
 									src={`${API}/journal/photo/${journal.slug}`}
-									//seo friendly, this image can be searched in google
 									alt={journal.title}
 									/>
 							</section>

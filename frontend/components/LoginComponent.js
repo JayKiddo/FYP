@@ -56,17 +56,23 @@ const LoginComponent = () => {
 	const loginForm = () => {
 	if(displayForm)
 	return(
+		<React.Fragment>
 		<form onSubmit={handleSubmit}>
 		<div className="form-group">
-			<input value={email} onChange={handleChange('email')} type="email" className="formControl" placeholder="Your email" /> 
+			<input value={email} onChange={handleChange('email')} type="email" className="form-control" placeholder="Your email" /> 
 		</div>
 		<div className="form-group">
-			<input value={password} onChange={handleChange('password')} type="password" className="formControl" placeholder="Your password" /> 
+			<input value={password} onChange={handleChange('password')} type="password" className="form-control" placeholder="Your password" /> 
 		</div>
 		<div>
-			<button className="btn btn-primary offset-md-3">Login</button>
+			<button className="btn btn-primary">Login</button>
 		</div>
 		</form>
+		<br/>
+		<div>
+			<button onClick={()=>{Router.replace('/password/forgot')}} className="btn btn-outline-danger btn-sm">Forget Password</button>
+		</div>
+		</React.Fragment>
 	) 
 	}
 

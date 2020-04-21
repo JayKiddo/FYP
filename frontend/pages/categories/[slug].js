@@ -22,7 +22,6 @@ const Categories = ({category,journals}) => {
 									return <SingleJournal key={index} journal={journal}/>
 								})}
 							</div>
-					
 					</div>
 				</main>
 			</Layout>

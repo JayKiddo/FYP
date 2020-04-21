@@ -13,7 +13,7 @@ const authenticateRoute = require('./routes/authenticate');
 const memberRoute = require('./routes/member');
 const categoryRoute = require('./routes/category');
 const tagRoute = require('./routes/tag');
-
+const contactRoute = require('./routes/contact');
 
 
 const application = express()
@@ -40,6 +40,7 @@ application.use('/api',authenticateRoute);
 application.use('/api',memberRoute);
 application.use('/api',categoryRoute);
 application.use('/api',tagRoute);
+application.use('/api',contactRoute);
 
 //port
 const port = process.env.PORT || 8000

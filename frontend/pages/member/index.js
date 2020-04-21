@@ -60,7 +60,7 @@ const MemberDashboard = () => {
 										<div className="col-md-4">
 											<img 
 												src={`${API}/member/photo/${username}`}
-												alt="User profile picture"
+												alt="Update your profile picture in update profile"
 												style={{maxWidth: '100%',height: '250px'}}
 												className="img img-fluid" 
 											/>

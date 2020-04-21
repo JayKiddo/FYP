@@ -11,6 +11,7 @@ router.get('/admin/profile',requireLogIn,adminMiddleware,read)
 
 
 router.put('/member/update',requireLogIn,memberMiddleware,updateMember)
+router.put('/admin/update',requireLogIn,adminMiddleware,updateMember)
 
 router.get('/member/photo/:username',photo);
 

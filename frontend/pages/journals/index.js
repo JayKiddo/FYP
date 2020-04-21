@@ -102,8 +102,7 @@ const Journal = ({journals,categories,tags,journalTotal,journalLimit,journalSkip
 	)
 }
 
-//using lifecycle method
-//request sent to backend
+//list journal should only get member's journals
 Journal.getInitialProps = () => {
 
 	let skip=0
